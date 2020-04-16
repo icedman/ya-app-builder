@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Registry, { PreviewRegistry } from '../Registry';
 
 Registry.add({
@@ -38,6 +37,11 @@ Registry.add({
     preview: 'Container',
   },
   view: {
+    attributes: {
+      dataModel: {
+        type: 'dataModel'
+      }
+    },
     children: {
       types: ['container'],
     },
@@ -45,7 +49,6 @@ Registry.add({
     preview: 'Container',
   },
 });
-
 
 function Container(props) {
   let orientation = props.node.orientation === 'horizontal' ? 'row' : 'column';
@@ -86,5 +89,5 @@ function Container(props) {
 }
 
 PreviewRegistry.add({
-  Container
-})
+  Container,
+});

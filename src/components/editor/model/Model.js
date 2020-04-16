@@ -1,12 +1,16 @@
-import Registry from '../Registry';
+import React from 'react';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 
-Registry.add({
+const model = {
   model: {
     children: {
-      types: ['field', 'field:date'],
+      types: [ 'field' ],
     },
   },
   field: {
+    defaults: {
+      dataType: 'string'
+    },
     attributes: {
       dataType: {
         type: 'select',
@@ -22,19 +26,45 @@ Registry.add({
           'file',
           'enumeration',
           'relation',
-          { value: 'richText', label: 'rich text' }
-        ]
-      }
+          { value: 'richText', label: 'rich text' },
+        ],
+      },
     },
   },
   'field:date': {
-    default: {
-      format: 'mm/dd/yyyy'
+    typeof: [ 'field' ],
+    defaults: {
+      dataType: 'date',
+      format: 'mm/dd/yyyy',
     },
-      attributes: {
-        format: {
-          type: 'string'
-        }
-      }
+    attributes: {
+      format: {
+        type: 'string',
+      },
+    },
+  }
+};
+
+
+Object.keys(model).forEach(k => {
+  if (k.indexOf('field:') === 0) {
+    model.model.children.types.push(k);
   }
 });
+
+Registry.add(model);
+
+function EditDataModel(props) {
+  // get models
+  return <div>select a data model</div>
+}
+
+function EditDataField(props) {
+  // get models
+  return <div>select a data field</div>
+}
+
+EditorRegistry.add({
+  dataModel: EditDataModel,
+  dataField: EditDataField
+})

@@ -2,7 +2,11 @@ import React from 'react';
 
 import './assets/_app.css';
 
-import Registry, { EditorRegistry, PreviewRegistry, TreeState } from 'components/editor/Editor';
+import Registry, {
+  EditorRegistry,
+  PreviewRegistry,
+  TreeState,
+} from 'components/editor/Editor';
 import 'components/editor/project/Project';
 import 'components/editor/view/View';
 import 'components/editor/model/Model';
@@ -49,6 +53,13 @@ function App() {
     });
   };
 
+  React.useEffect(() => {
+    fs.setState({
+      '_state.selected': tree.root,
+      '_state.preview': tree.root
+    })
+  }, []);
+
   fs.refreshOnDelete = (id) => {
     let s = { ...tree };
     if (tree._state.selected && tree._state.selected.id === id) {
@@ -66,7 +77,15 @@ function App() {
   return (
     <div className="App noselect">
       <div style={{ display: 'flex', flexDirection: 'columns' }}>
-        <div className='p-3' style={{ flex: '1', minWidth: '240px', height: '100vh', overflowY: 'auto' }}>
+        <div
+          className="p-3"
+          style={{
+            flex: '1',
+            minWidth: '240px',
+            height: '100vh',
+            overflowY: 'auto',
+          }}
+        >
           <ProjectTree
             node={tree.root}
             onSelect={onTreeSelect}
@@ -75,24 +94,35 @@ function App() {
           />
         </div>
 
-        <div className="has-background-grey-lighter p-3" style={{ flex: '4', height: '100vh', overflowY: 'auto' }}>
-          
+        <div
+          className="has-background-grey-lighter p-3"
+          style={{ flex: '4', height: '100vh', overflowY: 'auto' }}
+        >
           <div className="has-background-white p-1">
-          <Preview
-            node={previewNode}
-            onFocus={onSelect}
-            focused={tree._state.selected}
-            context={fs}
-          />
+            <Preview
+              node={previewNode}
+              onFocus={onSelect}
+              focused={tree._state.selected}
+              context={fs}
+            />
           </div>
 
+          {/*
           <div className="has-background-white">
-          <pre>{JSON.stringify(tree._state, null, 4)}</pre>
+            <pre>{JSON.stringify(tree._state, null, 4)}</pre>
           </div>
-          
+          */}
         </div>
 
-        <div className='p-1' style={{ flex: '1', minWidth: '240px', height: '100vh', overflowY: 'auto' }}>
+        <div
+          className="p-1"
+          style={{
+            flex: '1',
+            minWidth: '240px',
+            height: '100vh',
+            overflowY: 'auto',
+          }}
+        >
           <Properties node={tree._state.selected} context={fs} />
         </div>
       </div>

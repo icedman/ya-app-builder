@@ -1,5 +1,6 @@
 import React from 'react';
 import Registry, { EditorRegistry } from './Editor';
+import Icon from 'components/icons/Icon';
 
 import { guid, findById } from 'libs/utility';
 
@@ -80,8 +81,8 @@ function EditView(props) {
         <li>
           &nbsp;
           {path !== 'root' ? (
-            <button class="button is-small is-pulled-right" onClick={onDelete}>
-              Delete
+            <button className="button is-danger is-small is-pulled-right" onClick={onDelete}>
+              <Icon icon='faTrash'/>
             </button>
           ) : (
             ''
@@ -91,7 +92,7 @@ function EditView(props) {
       <ul>
         {attributes.map((at, idx) => {
           return (
-            <li className="p-3" key={`at-${idx}`}>
+            <li className="p-1" key={`at-${idx}`}>
               <EditAttribute
                 attribute={at}
                 context={props.context}
@@ -101,21 +102,25 @@ function EditView(props) {
           );
         })}
       </ul>
-      <ul>
+      <ul className="menu-list">
+        <li>
+        <ul className="menu-list">
         {childrenTypes.map((ct, idx) => {
           return (
             <li key={`ct-${idx}`}>
-              <button
-                className="button is-small"
+              <a
+                className="is-small"
                 onClick={() => {
                   onAddChild(ct);
                 }}
               >
-                Add {ct}
-              </button>
+                <Icon icon='faPlus'/><span className='m-2'>add {ct}</span>
+              </a>
             </li>
           );
         })}
+        </ul>
+        </li>
       </ul>
 
       <pre>{path}</pre>

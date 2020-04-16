@@ -80,6 +80,51 @@ $link-focus-border: $primary;
   margin: 16px;
 }
 
+.p-l-1 {
+  padding-left: 4px;
+}
+.p-l-2 {
+  padding-left: 8px;
+}
+
+.p-l-3 {
+  padding-left: 16px;
+}
+
+.m-l-1 {
+  margin-left: 4px;
+}
+.m-l-2 {
+  margin-left: 8px;
+}
+
+.m-l-3 {
+  margin-left: 16px;
+}
+
+.p-r-1 {
+  padding-right: 4px;
+}
+.p-r-2 {
+  padding-right: 8px;
+}
+
+.p-r-3 {
+  padding-right: 16px;
+}
+
+.m-r-1 {
+  margin-right: 4px;
+}
+.m-r-2 {
+  margin-right: 8px;
+}
+
+.m-r-3 {
+  margin-right: 16px;
+}
+
+
 .noselect * {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */

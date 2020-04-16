@@ -23,9 +23,9 @@ function Preview(props) {
   let componetInfo = Registry[node.type];
 
   if (!componetInfo) {
-    return <div></div>
+    return <div></div>;
   }
-  
+
   let Component = PreviewRegistry[componetInfo.preview || 'Container'];
   let onFocus = props.onFocus || (() => {});
 
@@ -160,7 +160,7 @@ function Preview(props) {
 
 PreviewRegistry.add({
   Preview,
-  renderChildrenPreview
+  renderChildrenPreview,
 });
 
 export default Preview;

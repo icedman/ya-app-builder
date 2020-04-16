@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import Icon from 'components/icons/Icon';
 
 import Registry, { EditorRegistry } from 'components/editor/Editor';
 
@@ -107,7 +108,8 @@ export default function ProjectTree(props) {
                     onAdd(c.type);
                   }}
                 >
-                  Add {c.type}
+                  <Icon icon='faPlus'/>
+                  <span className='m-2'>Add {c.type}</span>
                 </a>
               </li>
             </ul>
