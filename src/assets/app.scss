@@ -59,25 +59,25 @@ $link-focus-border: $primary;
 @import '../../node_modules/bulma/bulma.sass';
 
 .p-1 {
-  padding: 2px;
+  padding: 4px;
 }
 .p-2 {
-  padding: 4px;
+  padding: 8px;
 }
 
 .p-3 {
-  padding: 6px;
+  padding: 16px;
 }
 
 .m-1 {
-  margin: 2px;
+  margin: 4px;
 }
 .m-2 {
-  margin: 4px;
+  margin: 8px;
 }
 
 .m-3 {
-  margin: 6px;
+  margin: 16px;
 }
 
 .noselect * {
@@ -94,7 +94,9 @@ $link-focus-border: $primary;
   display: flex;
   padding: 4px;
   margin: 2px;
+  border: 1px solid transparent;
   flex: 1;
+  transition: border-color 0.25s ease-out
 }
 
 * {

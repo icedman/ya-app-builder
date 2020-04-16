@@ -2,7 +2,11 @@ import React from 'react';
 
 import './assets/_app.css';
 
-import Registry, { EditorRegistry, TreeState } from 'components/editor/Editor';
+import Registry, { EditorRegistry, PreviewRegistry, TreeState } from 'components/editor/Editor';
+import 'components/editor/project/Project';
+import 'components/editor/view/View';
+import 'components/editor/model/Model';
+
 import ProjectTree from 'components/editor/ProjectTree';
 import Properties from 'components/editor/Properties';
 import Preview from 'components/editor/Preview';
@@ -60,9 +64,9 @@ function App() {
   let previewNode = findById(fs.state(), previewId, { key: 'id' });
 
   return (
-    <div className="App">
-      <div className="ash_container">
-        <div style={{ flex: '1', minWidth: '240px' }}>
+    <div className="App noselect">
+      <div style={{ display: 'flex', flexDirection: 'columns' }}>
+        <div className='p-3' style={{ flex: '1', minWidth: '240px', height: '100vh', overflowY: 'auto' }}>
           <ProjectTree
             node={tree.root}
             onSelect={onTreeSelect}
@@ -71,17 +75,24 @@ function App() {
           />
         </div>
 
-        <div className="noselect" style={{ flex: '4' }}>
+        <div className="has-background-grey-lighter p-3" style={{ flex: '4', height: '100vh', overflowY: 'auto' }}>
+          
+          <div className="has-background-white p-1">
           <Preview
             node={previewNode}
             onFocus={onSelect}
             focused={tree._state.selected}
             context={fs}
           />
+          </div>
+
+          <div className="has-background-white">
           <pre>{JSON.stringify(tree._state, null, 4)}</pre>
+          </div>
+          
         </div>
 
-        <div style={{ flex: '1', minWidth: '240px' }}>
+        <div className='p-1' style={{ flex: '1', minWidth: '240px', height: '100vh', overflowY: 'auto' }}>
           <Properties node={tree._state.selected} context={fs} />
         </div>
       </div>

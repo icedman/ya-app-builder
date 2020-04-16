@@ -1,28 +1,19 @@
 import React from 'react';
-import View from './view/View';
-import Model from './model/Model';
 
 import StateHelper from 'libs/stateHelper';
 import { guid, findById } from 'libs/utility';
 
-const Registry = {
+import Registry, { EditorRegistry } from './Registry';
+
+Registry.add({
   object: {
     attributes: {
       name: {
         type: 'string',
       },
     },
-  },
-  project: {
-    children: {
-      showInTree: false,
-      types: ['view', 'model'],
-    },
-    preview: 'Project',
-  },
-  ...View,
-  ...Model,
-};
+  }
+});
 
 export class TreeState extends StateHelper {
   save() {}
@@ -33,6 +24,12 @@ export class TreeState extends StateHelper {
     opt = opt || {};
     let updatePath = [path, 'children'].join('.');
     let targetNode = this.getState(path);
+
+    if (!targetNode) {
+      // oops
+      return;
+    }
+
     let children = targetNode.children || [];
 
     if (node.type) {
@@ -89,7 +86,7 @@ export class TreeState extends StateHelper {
   }
 }
 
-export const EditorRegistry = {
+EditorRegistry.add({
   select: (props) => {
     let path = [props.path, props.attribute.name].join('.');
     let value = props.context.getState(path);
@@ -141,6 +138,9 @@ export const EditorRegistry = {
       </div>
     );
   },
-};
+});
 
 export default Registry;
+export {
+  EditorRegistry
+}

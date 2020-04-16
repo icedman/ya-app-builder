@@ -1,6 +1,8 @@
 import React from 'react';
 import Registry from './Editor';
 
+import { PreviewRegistry } from './Registry';
+
 import { guid, findById } from 'libs/utility';
 import debounce from 'debounce';
 
@@ -12,42 +14,6 @@ function renderChildrenPreview(children, props) {
   });
 }
 
-function Container(props) {
-  let orientation = props.node.orientation === 'horizontal' ? 'row' : 'column';
-  let flex = props.node.flex || (orientation === 'column' ? 1 : null);
-
-  let color =
-    props.focused && props.focused.id === props.node.id ? '#c0c0c0' : '#e5e5e5';
-  let opacity = 100;
-
-  if (props.context.getState('_state.dragOver') === props.node.id) {
-    color = '#505050';
-    opacity = 50;
-  }
-  if (props.context.getState('_state.drag') === props.node.id) {
-    color = '#505050';
-  }
-
-  let name = props.node.name || `${props.node.type} - ${props.node.id}`;
-
-  return (
-    <div
-      {...props}
-      className="ash_container"
-      style={{
-        flexDirection: orientation,
-        flex: flex,
-        border: '2px dashed',
-        borderColor: color,
-        opacity: `${opacity}%`,
-      }}
-    >
-      {name}
-      {renderChildrenPreview(props.node.children, props)}
-    </div>
-  );
-}
-
 function Preview(props) {
   let node = props.node;
   if (!node) {
@@ -55,19 +21,13 @@ function Preview(props) {
   }
 
   let componetInfo = Registry[node.type];
+
+  if (!componetInfo) {
+    return <div></div>
+  }
+  
   let Component = PreviewRegistry[componetInfo.preview || 'Container'];
   let onFocus = props.onFocus || (() => {});
-
-  /*
-
-  implement:
-  mouseover
-  dragstart (visual cue)
-  dragend (visual cue)
-  drag
-  drop
-  dragover (canDrop)
-  */
 
   let opt = { key: 'id' };
   let n = findById(props.context.state(), node.id, opt);
@@ -198,12 +158,9 @@ function Preview(props) {
   );
 }
 
-export const PreviewRegistry = {
+PreviewRegistry.add({
   Preview,
-  Container,
-  Project: (props) => {
-    return <div>The Project</div>;
-  },
-};
+  renderChildrenPreview
+});
 
 export default Preview;
