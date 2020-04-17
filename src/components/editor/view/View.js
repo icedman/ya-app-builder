@@ -14,13 +14,12 @@ Registry.add({
         type: 'select',
         options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
       },
-    }
+    },
   },
   container: {
     typeof: ['contained'],
-    categories: [],
     defaults: {
-        orientation: 'horizontal',
+      orientation: 'horizontal',
     },
     attributes: {
       orientation: {
@@ -44,6 +43,9 @@ Registry.add({
     preview: 'Container',
   },
   view: {
+    defaults: {
+      orientation: 'vertical',
+    },
     attributes: {
       dataModel: {
         type: 'dataModel',
@@ -75,12 +77,16 @@ function Container(props) {
         flex: flex,
       }}
     >
-      <div><span className='tag is-primary is-light m-r-2'>{node.type}</span> {name}</div>
+      {!node.children || !node.children.length ? (
+        <div className="node_type_indicator">
+          <span className="tag is-primary is-light m-r-2">{node.type}</span>
+        </div>
+      ) : null}
       {renderChildrenPreview(node.children, props)}
     </div>
   );
 }
 
 PreviewRegistry.add({
-  Container
+  Container,
 });

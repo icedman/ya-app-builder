@@ -7,9 +7,11 @@ import Registry, {
   PreviewRegistry,
   TreeState,
 } from 'components/editor/Editor';
-import 'components/editor/project/Project';
-import 'components/editor/view/View';
-import 'components/editor/model/Model';
+
+import 'components/editor/project';
+import 'components/editor/view';
+import 'components/editor/model';
+import 'components/editor/elements';
 
 import ProjectTree from 'components/editor/ProjectTree';
 import Properties from 'components/editor/Properties';
@@ -57,11 +59,7 @@ function App() {
   React.useEffect(() => {
     setTimeout(() => {
       fs.load();
-      fs.setState({
-        '_state.selected': tree.root,
-        '_state.preview': tree.root,
-      });
-    }, 0);
+    }, 50);
   }, []);
 
   fs.refreshOnDelete = (id) => {
@@ -82,7 +80,7 @@ function App() {
 
   return (
     <div className="App noselect">
-      <Nav style={{ height: `${navHeight}px` }} />
+      <Nav style={{ height: `${navHeight}px` }} context={fs} />
       <div style={{ display: 'flex', flexDirection: 'columns' }}>
         <div
           className="p-3"
@@ -109,20 +107,22 @@ function App() {
             overflowY: 'auto',
           }}
         >
-          <div className="has-background-white p-1">
-            <Preview
-              node={previewNode}
-              onFocus={onSelect}
-              focused={tree._state.selected}
-              context={fs}
-            />
-          </div>
+          {previewNode ? (
+            <div className="preview has-background-white p-1">
+              <Preview
+                node={previewNode}
+                onNodeFocus={onSelect}
+                focused={tree._state.selected}
+                context={fs}
+              />
+            </div>
+          ) : null}
 
-          {
+          {/*
             <div className="has-background-white">
               <pre>{JSON.stringify(tree._state, null, 4)}</pre>
             </div>
-          }
+          */}
         </div>
 
         <div

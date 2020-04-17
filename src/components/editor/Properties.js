@@ -1,15 +1,22 @@
-import React, { Fragment} from 'react';
+import React, { Fragment } from 'react';
 import Registry, { EditorRegistry } from './Editor';
 import Icon from 'components/icons/Icon';
 
 import { guid, findById } from 'libs/utility';
 
+function formatLabel(l) {
+  return l;
+}
+
 function Edit(props) {
-  return <div>{props.attribute.name}</div>;
+  return <div></div>;
 }
 
 function EditAttribute(props) {
-  let Component = EditorRegistry[props.attribute.type] || Edit;
+  let Component =
+    EditorRegistry[props.attribute.edit] ||
+    EditorRegistry[props.attribute.type] ||
+    Edit;
   return <Component {...props} />;
 }
 
@@ -28,64 +35,70 @@ function EditView(props) {
   let n = findById(props.context.state(), node.id, opt);
   let path = opt.path.join('.');
 
-  let attributes = component.attributes;
+  let attributes = Object.keys(component.attributes).map((k) => {
+    return component.attributes[k];
+  });
 
   // split attrbitues to sections
   let sections = {
     general: {
       label: 'General',
-      attributes: []
+      attributes: [],
     },
     layout: {
       label: 'Layout',
-      attributes: []
+      attributes: [],
     },
     content: {
       label: 'Content',
-      attributes: []
-    }
-  }
+      attributes: [],
+    },
+  };
 
-  attributes.forEach(a => {
+  attributes.forEach((a) => {
     let s = a.section || 'general';
     if (!sections[s]) {
       sections[s] = {
-        label: s,
-        attributes: []
-      }
+        label: formatLabel(s),
+        attributes: [],
+      };
     }
     sections[s].attributes.push(a);
-  })
+  });
 
-  Object.keys(sections).forEach(k => {
+  Object.keys(sections).forEach((k) => {
     if (!sections[k].attributes.length) {
       delete sections[k];
       return;
     }
-    sections[k].attributes.sort((a,b) => {
-        if (a.name === 'name') {
-          return -1;
-        }
-        if (b.name === 'name') {
-          return 1;
-        }
-        return a.name < b.name ? -1 : 1;
-    })
+    sections[k].attributes.sort((a, b) => {
+      if (a.name === 'name') {
+        return -1;
+      }
+      if (b.name === 'name') {
+        return 1;
+      }
+      return a.name < b.name ? -1 : 1;
+    });
   });
 
   let childrenTypes = [];
-
-  if (component && component.children && component.children.types) {
-    component.children.types.forEach((m) => {
-      if (m === 'any') {
-        Object.keys(Registry).forEach((a) => {
-          childrenTypes.push(a);
-        });
-        return;
-      }
-      childrenTypes.push(m);
-    });
+  if (component.children && component.children.types) {
+    childrenTypes = [...component.children.types];
   }
+
+  let childrenCategories = {};
+  childrenTypes.forEach((a) => {
+    let childInfo = Registry.get(a);
+    let s = childInfo.category || 'add';
+    if (!childrenCategories[s]) {
+      childrenCategories[s] = {
+        label: formatLabel(s),
+        children: [],
+      };
+    }
+    childrenCategories[s].children.push(a);
+  });
 
   const onDelete = () => {
     props.context.removeNode(path);
@@ -100,8 +113,8 @@ function EditView(props) {
   return (
     <div key={`attributes-${path}`}>
       <ul>
-        <li>
-          &nbsp;
+        <li style={{ minHeight: '40px' }}>
+          <span className="tag is-primary is-light m-r-2">{node.type}</span>
           {path !== 'root' ? (
             <button
               className="button is-danger is-small is-pulled-right"
@@ -114,46 +127,62 @@ function EditView(props) {
           )}
         </li>
       </ul>
-      <ul>
-      {Object.keys(sections).map((k, idx) => {
-        return <Fragment key={`sc-${idx}`}>
-          <li>{sections[k].label}</li>
-          {sections[k].attributes.map((at, idx) => {
-            return (
-              <li className="p-1" key={`at-${idx}`}>
-                <EditAttribute
-                  attribute={at}
-                  context={props.context}
-                  path={path}
-                />
-              </li>
-            );
-          })}
-        </Fragment>
-      })}
-      </ul>
 
       <ul className="menu-list">
-        {childrenTypes.map((ct, idx) => {
+        {Object.keys(sections).map((k, idx) => {
           return (
-            <li key={`ct-${idx}`}>
-              <a
-                className="is-small"
-                onClick={() => {
-                  onAddChild(ct);
-                }}
-              >
-                <Icon icon="faPlus" />
-                <span className="m-2">add {ct}</span>
-              </a>
-            </li>
+            <Fragment key={`sc-${idx}`}>
+              <li className="menu-label has-background-light">
+                <a>{sections[k].label}</a>
+              </li>
+              {sections[k].attributes.map((at, idx) => {
+                return (
+                  <li className="p-1" key={`at-${idx}`}>
+                    <EditAttribute
+                      attribute={at}
+                      context={props.context}
+                      path={path}
+                    />
+                  </li>
+                );
+              })}
+            </Fragment>
           );
         })}
       </ul>
 
-      <div className='m-1'>
-      <pre>{path}</pre>
-      <pre>{JSON.stringify(component, null, 4)}</pre>
+      <hr />
+
+      <ul className="menu-list">
+        {Object.keys(childrenCategories).map((k, idx) => {
+          return (
+            <Fragment key={`ct-${idx}`}>
+              <li className="menu-label has-background-light">
+                <a>{childrenCategories[k].label}</a>
+              </li>
+              {childrenCategories[k].children.map((ct, idx) => {
+                return (
+                  <li key={`ct-${idx}`}>
+                    <a
+                      className="is-small"
+                      onClick={() => {
+                        onAddChild(ct);
+                      }}
+                    >
+                      <Icon icon="faPlus" />
+                      <span className="m-2">{ct}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </Fragment>
+          );
+        })}
+      </ul>
+
+      <div className="m-1">
+        <pre>{path}</pre>
+        <pre>{JSON.stringify(component, null, 4)}</pre>
       </div>
     </div>
   );

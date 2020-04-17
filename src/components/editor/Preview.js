@@ -11,14 +11,7 @@ const state = {};
 
 function renderChildrenPreview(children, props) {
   return (children || []).map((node, idx) => {
-    return (
-      <Preview
-        {...props}
-        className=''
-        node={node}
-        key={`cp-${idx}`}
-      />
-    );
+    return <Preview {...props} className="" node={node} key={`cp-${idx}`} />;
   });
 }
 
@@ -35,7 +28,7 @@ function Preview(props) {
   }
 
   let Component = PreviewRegistry[componetInfo.preview || 'Container'];
-  let onFocus = props.onFocus || (() => {});
+  let onNodeFocus = props.onNodeFocus || (() => {});
 
   let opt = { key: 'id' };
   let n = findById(props.context.state(), node.id, opt);
@@ -142,9 +135,10 @@ function Preview(props) {
     let dtIdx = Number(dt.pop());
     let dropTarget = dt.join('.');
 
+    highlightTarget(node.id);
+
     if (dragSource === dropTarget) {
       state.canDrop = true;
-      highlightTarget(node.id);
       return;
     }
 
@@ -177,7 +171,7 @@ function Preview(props) {
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       onClick={(evt) => {
-        onFocus(node);
+        onNodeFocus(node);
         evt.stopPropagation();
       }}
     />

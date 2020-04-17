@@ -46,7 +46,7 @@ export class TreeState extends StateHelper {
     let children = targetNode.children || [];
 
     if (node.type) {
-      let componentInfo = Registry[targetNode.type];
+      let componentInfo = Registry.get(targetNode.type);
       if (componentInfo.children && componentInfo.types) {
         if (componentInfo.types.indexOf(node.type) == -1) {
           return false;
@@ -55,6 +55,10 @@ export class TreeState extends StateHelper {
 
       let newComponentInfo = Registry.get(node.type);
       if (newComponentInfo.defaults) {
+        // console.log(node.type);
+        // console.log(node);
+        // console.log(newComponentInfo.defaults);
+
         node = {
           ...newComponentInfo.defaults,
           ...node,
@@ -109,6 +113,10 @@ export class TreeState extends StateHelper {
 
 EditorRegistry.add({
   select: (props) => {
+    // return <pre>
+    //   {JSON.stringify(props, null, 4)}
+    // </pre>
+
     let path = [props.path, props.attribute.name].join('.');
     let value = props.context.getState(path);
 
@@ -136,6 +144,7 @@ EditorRegistry.add({
             })}
           </select>
         </div>
+        <p className="help">{props.attribute.description}</p>
       </div>
     );
   },
@@ -156,9 +165,14 @@ EditorRegistry.add({
           defaultValue={value}
           onChange={onChange}
         />
+        <p className="help">{props.attribute.description}</p>
       </div>
     );
   },
+});
+
+EditorRegistry.add({
+  text: EditorRegistry.string,
 });
 
 export default Registry;
