@@ -17,6 +17,9 @@ function EditAttribute(props) {
     EditorRegistry[props.attribute.edit] ||
     EditorRegistry[props.attribute.type] ||
     Edit;
+
+  // get value here!
+
   return <Component {...props} />;
 }
 

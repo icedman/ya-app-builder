@@ -7,6 +7,8 @@ import Registry, { EditorRegistry } from './Registry';
 import merge from 'merge';
 import cache from 'libs/cache';
 
+import deepEqual from 'deep-equal';
+
 Registry.add({
   object: {
     attributes: {
@@ -20,11 +22,14 @@ Registry.add({
 export class TreeState extends StateHelper {
   save() {
     let state = this.getState('root');
-    cache.put('project', state, { persist: true });
+    let projectId = `project-${state.id}`;
+    cache.put(projectId, state, { persist: true });
+    cache.put('last-project', projectId, { persist: true });
   }
 
   load() {
-    let state = cache.get('project');
+    let projectId = cache.get('last-project') || 'project-default';
+    let state = cache.get(projectId);
     if (state.id) {
       this.setState({
         root: state,
@@ -111,64 +116,72 @@ export class TreeState extends StateHelper {
   }
 }
 
+function EditSelection(props) {
+  // return <pre>
+  //   {JSON.stringify(props, null, 4)}
+  // </pre>
+
+  console.log('!select');
+
+  let path = [props.path, props.attribute.name].join('.');
+  let value = props.context.getState(path);
+
+  const onChange = (v) => {
+    props.context.setState({ [path]: v.target.value });
+  };
+
+  return (
+    <div className="field">
+      <div className="label">{props.attribute.name}</div>
+      <div className="select is-small">
+        <select onChange={onChange} defaultValue={value}>
+          <option></option>
+          {props.attribute.options.map((opt, idx) => {
+            let o = {
+              label: opt.label || opt,
+              value: opt.value || opt,
+            };
+            let sel = o.value === value;
+            return (
+              <option key={`opt-${idx}`} value={o.value}>
+                {o.label}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+      <p className="help">{props.attribute.description}</p>
+    </div>
+  );
+}
+
+const EditSelectionMemo = React.memo(EditSelection);
+
+function EditString(props) {
+  let path = [props.path, props.attribute.name].join('.');
+  let value = props.context.getState(path);
+
+  const onChange = (v) => {
+    props.context.setState({ [path]: v.target.value });
+  };
+  return (
+    <div className="field">
+      <div className="label">{props.attribute.name}</div>
+      <input
+        className="input is-small"
+        type="text"
+        defaultValue={value}
+        onChange={onChange}
+      />
+      <p className="help">{props.attribute.description}</p>
+    </div>
+  );
+}
+
 EditorRegistry.add({
-  select: (props) => {
-    // return <pre>
-    //   {JSON.stringify(props, null, 4)}
-    // </pre>
+  select: EditSelectionMemo,
 
-    let path = [props.path, props.attribute.name].join('.');
-    let value = props.context.getState(path);
-
-    const onChange = (v) => {
-      props.context.setState({ [path]: v.target.value });
-    };
-
-    return (
-      <div className="field">
-        <div className="label">{props.attribute.name}</div>
-        <div className="select is-small">
-          <select onChange={onChange} defaultValue={value}>
-            <option></option>
-            {props.attribute.options.map((opt, idx) => {
-              let o = {
-                label: opt.label || opt,
-                value: opt.value || opt,
-              };
-              let sel = o.value === value;
-              return (
-                <option key={`opt-${idx}`} value={o.value}>
-                  {o.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <p className="help">{props.attribute.description}</p>
-      </div>
-    );
-  },
-
-  string: (props) => {
-    let path = [props.path, props.attribute.name].join('.');
-    let value = props.context.getState(path);
-
-    const onChange = (v) => {
-      props.context.setState({ [path]: v.target.value });
-    };
-    return (
-      <div className="field">
-        <div className="label">{props.attribute.name}</div>
-        <input
-          className="input is-small"
-          type="text"
-          defaultValue={value}
-          onChange={onChange}
-        />
-        <p className="help">{props.attribute.description}</p>
-      </div>
-    );
-  },
+  string: EditString,
 });
 
 EditorRegistry.add({

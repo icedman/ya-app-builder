@@ -46,6 +46,8 @@ function App() {
     });
   };
 
+  fs.onNodeSelect = onSelect;
+
   const onTreeSelect = (item) => {
     setTree({
       ...tree,
@@ -111,7 +113,6 @@ function App() {
             <div className="preview has-background-white p-1">
               <Preview
                 node={previewNode}
-                onNodeFocus={onSelect}
                 focused={tree._state.selected}
                 context={fs}
               />

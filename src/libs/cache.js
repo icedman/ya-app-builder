@@ -96,3 +96,5 @@ export class SimpleCache {
 const cache = new SimpleCache(window.localStorage);
 export const session = new SimpleCache(window.sessionStorage);
 export default cache;
+
+window.$cx = cache;

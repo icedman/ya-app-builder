@@ -1,6 +1,7 @@
 import React from 'react';
 import Registry from './Editor';
 import clsx from 'clsx';
+import deepEqual from 'deep-equal';
 
 import { PreviewRegistry } from './Registry';
 
@@ -28,7 +29,7 @@ function Preview(props) {
   }
 
   let Component = PreviewRegistry[componetInfo.preview || 'Container'];
-  let onNodeFocus = props.onNodeFocus || (() => {});
+  let onNodeSelect = props.context.onNodeSelect || (() => {});
 
   let opt = { key: 'id' };
   let n = findById(props.context.state(), node.id, opt);
@@ -171,12 +172,34 @@ function Preview(props) {
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       onClick={(evt) => {
-        onNodeFocus(node);
+        onNodeSelect(node);
         evt.stopPropagation();
       }}
     />
   );
 }
+
+function previewNodePropsAreEqual(prevProps, nextProps) {
+  // node children count
+  let prev = { ...prevProps.node };
+  let next = { ...nextProps.node };
+
+  if (nextProps.preview && nextProps.preview.id === prev.id) {
+    return false;
+  }
+  if (prevProps.preview && prevProps.preview.id === prev.id) {
+    return false;
+  }
+
+  if ((prev.children || []).length != (prev.children || []).length) {
+    return false;
+  }
+
+  // state
+  return deepEqual(prev, next);
+}
+
+const PreviewTreeNodeMemo = React.memo(Preview, previewNodePropsAreEqual);
 
 PreviewRegistry.add({
   Preview,

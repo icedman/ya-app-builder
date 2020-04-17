@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import Icon from 'components/icons/Icon';
+import deepEqual from 'deep-equal';
 
 import Registry, { EditorRegistry } from 'components/editor/Editor';
 
@@ -33,7 +34,7 @@ function TreeNode(props) {
           {node.children.map((c, idx) => {
             return (
               <li key={c.id}>
-                <TreeNode {...props} node={c} />
+                <TreeNodeMemo {...props} node={c} />
               </li>
             );
           })}
@@ -44,6 +45,34 @@ function TreeNode(props) {
     </div>
   );
 }
+
+function treeNodePropsAreEqual(prevProps, nextProps) {
+  // node children count
+  let prev = { ...prevProps.node };
+  let next = { ...nextProps.node };
+
+  if (nextProps.preview && nextProps.preview.id === prev.id) {
+    return false;
+  }
+  if (prevProps.preview && prevProps.preview.id === prev.id) {
+    return false;
+  }
+  if (nextProps.selected && nextProps.selected.id === prev.id) {
+    return false;
+  }
+  if (prevProps.selected && prevProps.selected.id === prev.id) {
+    return false;
+  }
+
+  if ((prev.children || []).length != (prev.children || []).length) {
+    return false;
+  }
+
+  // state
+  return deepEqual(prev, next);
+}
+
+const TreeNodeMemo = React.memo(TreeNode, treeNodePropsAreEqual);
 
 export default function ProjectTree(props) {
   let views = (props.node.children || []).filter((v) => {
@@ -86,7 +115,7 @@ export default function ProjectTree(props) {
       <p className="menu-label">Project</p>
       <ul className="menu-list">
         <li>
-          <TreeNode {...props} />
+          <TreeNodeMemo {...props} />
         </li>
       </ul>
 
@@ -98,7 +127,7 @@ export default function ProjectTree(props) {
               {c.items.map((v, idx) => {
                 return (
                   <li key={`view-${idx}`}>
-                    <TreeNode {...props} node={v} />
+                    <TreeNodeMemo {...props} node={v} />
                   </li>
                 );
               })}
@@ -109,7 +138,7 @@ export default function ProjectTree(props) {
                   }}
                 >
                   <Icon icon="faPlus" />
-                  <span className="m-2">Add {c.type}</span>
+                  <span className="m-2">add {c.type}</span>
                 </a>
               </li>
             </ul>
