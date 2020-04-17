@@ -108,8 +108,8 @@ export default function ProjectTree(props) {
                     onAdd(c.type);
                   }}
                 >
-                  <Icon icon='faPlus'/>
-                  <span className='m-2'>Add {c.type}</span>
+                  <Icon icon="faPlus" />
+                  <span className="m-2">Add {c.type}</span>
                 </a>
               </li>
             </ul>

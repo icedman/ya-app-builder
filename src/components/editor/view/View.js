@@ -1,23 +1,30 @@
 import React from 'react';
 import Registry, { PreviewRegistry } from '../Registry';
+import clsx from 'clsx';
 
 Registry.add({
   contained: {
     attributes: {
       className: {
+        section: 'layout',
         type: 'string',
       },
       flex: {
+        section: 'layout',
         type: 'select',
         options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
       },
-    },
+    }
   },
   container: {
     typeof: ['contained'],
     categories: [],
+    defaults: {
+        orientation: 'horizontal',
+    },
     attributes: {
       orientation: {
+        section: 'layout',
         type: 'select',
         options: [
           {
@@ -39,8 +46,8 @@ Registry.add({
   view: {
     attributes: {
       dataModel: {
-        type: 'dataModel'
-      }
+        type: 'dataModel',
+      },
     },
     children: {
       types: ['container'],
@@ -54,40 +61,26 @@ function Container(props) {
   let orientation = props.node.orientation === 'horizontal' ? 'row' : 'column';
   let flex = props.node.flex || (orientation === 'column' ? 1 : null);
 
-  let color =
-    props.focused && props.focused.id === props.node.id ? '#a0a0a0' : '#e5e5e5';
-  let opacity = 100;
-
-  if (props.context.getState('_state.dragOver') === props.node.id) {
-    color = '#ff0000';
-    opacity = 50;
-  }
-  if (props.context.getState('_state.drag') === props.node.id) {
-    color = '#505050';
-  }
-
-  let name = props.node.name || `${props.node.type} - ${props.node.id}`;
+  let node = props.node;
+  let name = node.name || node.id;
 
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   return (
     <div
       {...props}
-      className="ash_container"
+      className={clsx(props.className, 'node_view')}
       style={{
         flexDirection: orientation,
         flex: flex,
-        border: '2px dashed',
-        borderColor: color,
-        opacity: `${opacity}%`,
       }}
     >
-      {name}
-      {renderChildrenPreview(props.node.children, props)}
+      <div><span className='tag is-primary is-light m-r-2'>{node.type}</span> {name}</div>
+      {renderChildrenPreview(node.children, props)}
     </div>
   );
 }
 
 PreviewRegistry.add({
-  Container,
+  Container
 });

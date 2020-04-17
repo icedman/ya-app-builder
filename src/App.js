@@ -14,6 +14,7 @@ import 'components/editor/model/Model';
 import ProjectTree from 'components/editor/ProjectTree';
 import Properties from 'components/editor/Properties';
 import Preview from 'components/editor/Preview';
+import Nav from './Nav';
 
 import { guid, findById } from 'libs/utility';
 
@@ -54,10 +55,13 @@ function App() {
   };
 
   React.useEffect(() => {
-    fs.setState({
-      '_state.selected': tree.root,
-      '_state.preview': tree.root
-    })
+    setTimeout(() => {
+      fs.load();
+      fs.setState({
+        '_state.selected': tree.root,
+        '_state.preview': tree.root,
+      });
+    }, 0);
   }, []);
 
   fs.refreshOnDelete = (id) => {
@@ -74,15 +78,18 @@ function App() {
   let previewId = (tree._state.preview || { id: 0 }).id;
   let previewNode = findById(fs.state(), previewId, { key: 'id' });
 
+  let navHeight = 60;
+
   return (
     <div className="App noselect">
+      <Nav style={{ height: `${navHeight}px` }} />
       <div style={{ display: 'flex', flexDirection: 'columns' }}>
         <div
           className="p-3"
           style={{
             flex: '1',
             minWidth: '240px',
-            height: '100vh',
+            height: `calc(100vh - ${navHeight}px)`,
             overflowY: 'auto',
           }}
         >
@@ -96,7 +103,11 @@ function App() {
 
         <div
           className="has-background-grey-lighter p-3"
-          style={{ flex: '4', height: '100vh', overflowY: 'auto' }}
+          style={{
+            flex: '4',
+            height: `calc(100vh - ${navHeight}px)`,
+            overflowY: 'auto',
+          }}
         >
           <div className="has-background-white p-1">
             <Preview
@@ -107,11 +118,11 @@ function App() {
             />
           </div>
 
-          {/*
-          <div className="has-background-white">
-            <pre>{JSON.stringify(tree._state, null, 4)}</pre>
-          </div>
-          */}
+          {
+            <div className="has-background-white">
+              <pre>{JSON.stringify(tree._state, null, 4)}</pre>
+            </div>
+          }
         </div>
 
         <div
@@ -119,7 +130,7 @@ function App() {
           style={{
             flex: '1',
             minWidth: '240px',
-            height: '100vh',
+            height: `calc(100vh - ${navHeight}px)`,
             overflowY: 'auto',
           }}
         >

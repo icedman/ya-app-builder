@@ -4,6 +4,7 @@ import StateHelper from 'libs/stateHelper';
 import { guid, findById } from 'libs/utility';
 
 import Registry, { EditorRegistry } from './Registry';
+import merge from 'merge';
 import cache from 'libs/cache';
 
 Registry.add({
@@ -17,7 +18,6 @@ Registry.add({
 });
 
 export class TreeState extends StateHelper {
-  
   save() {
     let state = this.getState('root');
     cache.put('project', state, { persist: true });
@@ -27,8 +27,8 @@ export class TreeState extends StateHelper {
     let state = cache.get('project');
     if (state.id) {
       this.setState({
-        root: state
-      })
+        root: state,
+      });
     }
     // console.log(state);
   }
@@ -53,12 +53,12 @@ export class TreeState extends StateHelper {
         }
       }
 
-      let newComponentInfo = Registry[node.type];
+      let newComponentInfo = Registry.get(node.type);
       if (newComponentInfo.defaults) {
         node = {
           ...newComponentInfo.defaults,
-          ...node
-        }
+          ...node,
+        };
       }
     }
 

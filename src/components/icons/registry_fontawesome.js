@@ -12,7 +12,7 @@ export const library = {
     if (name) {
       library[name] = icon;
     }
-  }
+  },
 };
 
 library.add(faTrash, 'faTrash');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment} from 'react';
 import Registry, { EditorRegistry } from './Editor';
 import Icon from 'components/icons/Icon';
 
@@ -19,7 +19,7 @@ function EditView(props) {
     return <div></div>;
   }
 
-  let component = Registry[node.type];
+  let component = Registry.get(node.type);
   if (!component) {
     return <div></div>;
   }
@@ -28,27 +28,49 @@ function EditView(props) {
   let n = findById(props.context.state(), node.id, opt);
   let path = opt.path.join('.');
 
-  let componentAttributes = {};
+  let attributes = component.attributes;
 
-  [...(component.typeof || []), 'object'].forEach((t) => {
-    let inherit = Registry[t];
-    componentAttributes = {
-      ...componentAttributes,
-      ...inherit.attributes,
-    };
-  });
+  // split attrbitues to sections
+  let sections = {
+    general: {
+      label: 'General',
+      attributes: []
+    },
+    layout: {
+      label: 'Layout',
+      attributes: []
+    },
+    content: {
+      label: 'Content',
+      attributes: []
+    }
+  }
 
-  componentAttributes = {
-    ...componentAttributes,
-    ...component.attributes,
-  };
+  attributes.forEach(a => {
+    let s = a.section || 'general';
+    if (!sections[s]) {
+      sections[s] = {
+        label: s,
+        attributes: []
+      }
+    }
+    sections[s].attributes.push(a);
+  })
 
-  // merge
-  let attributes = Object.keys(componentAttributes).map((k) => {
-    return {
-      name: k,
-      ...componentAttributes[k],
-    };
+  Object.keys(sections).forEach(k => {
+    if (!sections[k].attributes.length) {
+      delete sections[k];
+      return;
+    }
+    sections[k].attributes.sort((a,b) => {
+        if (a.name === 'name') {
+          return -1;
+        }
+        if (b.name === 'name') {
+          return 1;
+        }
+        return a.name < b.name ? -1 : 1;
+    })
   });
 
   let childrenTypes = [];
@@ -81,8 +103,11 @@ function EditView(props) {
         <li>
           &nbsp;
           {path !== 'root' ? (
-            <button className="button is-danger is-small is-pulled-right" onClick={onDelete}>
-              <Icon icon='faTrash'/>
+            <button
+              className="button is-danger is-small is-pulled-right"
+              onClick={onDelete}
+            >
+              <Icon icon="faTrash" />
             </button>
           ) : (
             ''
@@ -90,21 +115,25 @@ function EditView(props) {
         </li>
       </ul>
       <ul>
-        {attributes.map((at, idx) => {
-          return (
-            <li className="p-1" key={`at-${idx}`}>
-              <EditAttribute
-                attribute={at}
-                context={props.context}
-                path={path}
-              />
-            </li>
-          );
-        })}
+      {Object.keys(sections).map((k, idx) => {
+        return <Fragment key={`sc-${idx}`}>
+          <li>{sections[k].label}</li>
+          {sections[k].attributes.map((at, idx) => {
+            return (
+              <li className="p-1" key={`at-${idx}`}>
+                <EditAttribute
+                  attribute={at}
+                  context={props.context}
+                  path={path}
+                />
+              </li>
+            );
+          })}
+        </Fragment>
+      })}
       </ul>
+
       <ul className="menu-list">
-        <li>
-        <ul className="menu-list">
         {childrenTypes.map((ct, idx) => {
           return (
             <li key={`ct-${idx}`}>
@@ -114,17 +143,18 @@ function EditView(props) {
                   onAddChild(ct);
                 }}
               >
-                <Icon icon='faPlus'/><span className='m-2'>add {ct}</span>
+                <Icon icon="faPlus" />
+                <span className="m-2">add {ct}</span>
               </a>
             </li>
           );
         })}
-        </ul>
-        </li>
       </ul>
 
+      <div className='m-1'>
       <pre>{path}</pre>
       <pre>{JSON.stringify(component, null, 4)}</pre>
+      </div>
     </div>
   );
 }

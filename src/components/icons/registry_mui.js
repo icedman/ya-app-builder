@@ -13,7 +13,7 @@ import InputIcon from '@material-ui/icons/Input';
 export const library = {
   add: (icon, name) => {
     library[name] = icon;
-  }
+  },
 };
 
 /*

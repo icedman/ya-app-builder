@@ -2,9 +2,9 @@
 
 const config = {
   app: {
-    id: 'my-app'
-  }
-}
+    id: 'my-app',
+  },
+};
 
 class SimplePersist {
   constructor(storage, id) {
@@ -38,7 +38,7 @@ export class SimpleCache {
     let _data = {
       key: key,
       data: data,
-      opts
+      opts,
     };
 
     this.cache[key] = _data;
@@ -63,7 +63,7 @@ export class SimpleCache {
   clear(key) {
     // todo clear perists
     if (key == null) {
-      Object.keys(this.cache).forEach(k => {
+      Object.keys(this.cache).forEach((k) => {
         this.persist.removeItem(k);
         delete this.cache[k];
       });
@@ -83,7 +83,7 @@ export class SimpleCache {
     if (this.cache[key] && this.cache[key].data) {
       return Promise.resolve(this.cache[key].data);
     }
-    return requestFunc().then(res => {
+    return requestFunc().then((res) => {
       if (!res) {
         return Promise.resolve(null);
       }

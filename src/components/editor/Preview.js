@@ -1,5 +1,6 @@
 import React from 'react';
 import Registry from './Editor';
+import clsx from 'clsx';
 
 import { PreviewRegistry } from './Registry';
 
@@ -10,7 +11,14 @@ const state = {};
 
 function renderChildrenPreview(children, props) {
   return (children || []).map((node, idx) => {
-    return <Preview {...props} node={node} key={`cp-${idx}`} />;
+    return (
+      <Preview
+        {...props}
+        className=''
+        node={node}
+        key={`cp-${idx}`}
+      />
+    );
   });
 }
 
@@ -48,6 +56,18 @@ function Preview(props) {
     });
   }, 50);
 
+  const onDragEnd = (evt) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    setTimeout(() => {
+      props.context.setState({
+        '_state.drag': null,
+        '_state.dragOver': null,
+      });
+    }, 50);
+  };
+
   const onDrag = (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
@@ -67,13 +87,6 @@ function Preview(props) {
     if (!state.canDrop) {
       return;
     }
-
-    setTimeout(() => {
-      props.context.setState({
-        '_state.drag': null,
-        '_state.dragOver': null,
-      });
-    }, 50);
 
     let ds = state.dragPath.split('.');
     let dsIdx = Number(ds.pop());
@@ -142,14 +155,27 @@ function Preview(props) {
     }
   };
 
+  let cls = [];
+  if (props.focused && props.focused.id === props.node.id) {
+    cls.push('is-node-focused');
+  }
+  if (props.context.getState('_state.dragOver') === props.node.id) {
+    cls.push('is-node-targeted');
+  }
+  if (props.context.getState('_state.drag') === props.node.id) {
+    cls.push('is-node-dragged');
+  }
+
   return (
     <Component
       {...props}
+      className={clsx(props.className, 'node_container', cls)}
       node={node}
       draggable={true}
       onDrag={onDrag}
       onDrop={onDrop}
       onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
       onClick={(evt) => {
         onFocus(node);
         evt.stopPropagation();
