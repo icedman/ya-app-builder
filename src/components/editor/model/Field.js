@@ -1,5 +1,8 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
+import Registry, {
+  EditorRegistry,
+  PreviewRegistry,
+} from 'components/editor/Registry';
 import clsx from 'clsx';
 
 const field = {

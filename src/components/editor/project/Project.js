@@ -1,14 +1,34 @@
 import React from 'react';
+import Registry, {
+  EditorRegistry,
+  PreviewRegistry,
+} from 'components/editor/Registry';
+import { withRouter } from 'react-router-dom';
 
-import Registry, { PreviewRegistry } from '../Registry';
+import { useApp } from 'stores/AppStore';
 
-const Project = (props) => {
+const Project = withRouter((props) => {
+  const app = useApp();
+
   const onSave = () => {
     props.context.save();
   };
 
   const onLoad = () => {
     props.context.load();
+  };
+
+  const onRun = () => {
+    let state = props.context.getState('root');
+    app.dispatch(
+      app.setState({
+        definition: state,
+      })
+    );
+
+    setTimeout(() => {
+      props.history.push('/app');
+    }, 0);
   };
 
   const state = props.context.getState('root');
@@ -36,6 +56,10 @@ const Project = (props) => {
           <button className="button" onClick={onLoad}>
             Load
           </button>
+
+          <a className="button is-danger" onClick={onRun}>
+            Run
+          </a>
         </div>
       </section>
 
@@ -44,13 +68,13 @@ const Project = (props) => {
       </div>
     </div>
   );
-};
+});
 
 Registry.add({
   project: {
     children: {
       showInTree: false,
-      types: ['view', 'model'],
+      types: ['page', 'view', 'model'],
     },
     attributes: {
       description: {
@@ -59,12 +83,13 @@ Registry.add({
       server: {
         section: 'endpoints',
         type: 'string',
-        description: 'app builder server',
+        description: 'app server',
       },
-      assets: {
-        section: 'endpoints',
-        type: 'string',
-        description: 'assets path',
+      startup: {
+        section: 'content',
+        type: 'text',
+        description: 'startup page',
+        edit: 'pageUrl',
       },
     },
     preview: 'Project',

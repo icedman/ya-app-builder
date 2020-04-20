@@ -75,24 +75,26 @@ function treeNodePropsAreEqual(prevProps, nextProps) {
 const TreeNodeMemo = React.memo(TreeNode, treeNodePropsAreEqual);
 
 export default function ProjectTree(props) {
-  let views = (props.node.children || []).filter((v) => {
-    return v.type === 'view';
-  });
-
-  let models = (props.node.children || []).filter((v) => {
-    return v.type === 'model';
-  });
-
   let cats = [
     {
+      label: 'Pages',
+      items: (props.node.children || []).filter((v) => {
+        return v.type === 'page';
+      }),
+      type: 'page',
+    },
+    {
       label: 'Views',
-      items: views,
+      items: (props.node.children || []).filter((v) => {
+        return v.type === 'view';
+      }),
       type: 'view',
     },
-
     {
       label: 'Models',
-      items: models,
+      items: (props.node.children || []).filter((v) => {
+        return v.type === 'model';
+      }),
       type: 'model',
     },
   ];

@@ -70,6 +70,32 @@ export function findById(state, id, opt) {
   );
 }
 
+export function injectId(state) {
+  if (state && typeof state === 'object') {
+    // array
+    if (state.length !== undefined) {
+      for (let i = 0; i < state.length; i++) {
+        injectId(state[i]);
+      }
+      return state;
+    }
+
+    try {
+      state.uuid = state.uuid || guid();
+    } catch (err) {
+      //
+    }
+
+    // object
+    let keys = Object.keys(state);
+    for (let i = 0; i < keys.length; i++) {
+      injectId(state[keys[i]]);
+    }
+  }
+
+  return state;
+}
+
 export function pathToUpdateObject(path, value) {
   let p = path.split('.');
   let obj = {};

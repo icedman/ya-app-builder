@@ -38,26 +38,8 @@ export class TreeState extends StateHelper {
     // console.log(state);
   }
 
-  addNode(path, node, opt) {
-    opt = opt || {};
-    let updatePath = [path, 'children'].join('.');
-    let targetNode = this.getState(path);
-
-    if (!targetNode) {
-      // oops
-      return;
-    }
-
-    let children = targetNode.children || [];
-
+  createNode(node) {
     if (node.type) {
-      let componentInfo = Registry.get(targetNode.type);
-      if (componentInfo.children && componentInfo.types) {
-        if (componentInfo.types.indexOf(node.type) == -1) {
-          return false;
-        }
-      }
-
       let newComponentInfo = Registry.get(node.type);
       if (newComponentInfo.defaults) {
         // console.log(node.type);
@@ -73,9 +55,33 @@ export class TreeState extends StateHelper {
 
     let newNode = {
       id: guid(),
+      type: 'unknown',
       children: [],
       ...node,
     };
+
+    return newNode;
+  }
+
+  addNode(path, node, opt) {
+    opt = opt || {};
+    let updatePath = [path, 'children'].join('.');
+    let targetNode = this.getState(path);
+
+    if (!targetNode) {
+      // oops
+      return;
+    }
+
+    let componentInfo = Registry.get(targetNode.type);
+    if (componentInfo.children && componentInfo.types) {
+      if (componentInfo.types.indexOf(node.type) == -1) {
+        return false;
+      }
+    }
+
+    let children = targetNode.children || [];
+    let newNode = this.createNode(node, targetNode);
 
     let _state = this.getState('_state');
     if (opt.focus) {
@@ -95,6 +101,10 @@ export class TreeState extends StateHelper {
 
   removeNode(path) {
     let targetNode = this.getState(path);
+    if (!targetNode) {
+      return null;
+    }
+
     let _state = this.getState('_state');
 
     if (_state.selected && _state.selected.id === targetNode.id) {
@@ -120,8 +130,6 @@ function EditSelection(props) {
   // return <pre>
   //   {JSON.stringify(props, null, 4)}
   // </pre>
-
-  console.log('!select');
 
   let path = [props.path, props.attribute.name].join('.');
   let value = props.context.getState(path);

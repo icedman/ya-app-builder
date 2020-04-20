@@ -86,4 +86,4 @@ const EditorRegistry = {
 export default Registry;
 export { EditorRegistry, PreviewRegistry };
 
-// window.$r = Registry;
+window.$r = Registry;

@@ -3,6 +3,7 @@ import Registry, { EditorRegistry } from './Editor';
 import Icon from 'components/icons/Icon';
 
 import { guid, findById } from 'libs/utility';
+import { useUI } from 'stores/UIStore';
 
 function formatLabel(l) {
   return l;
@@ -24,6 +25,8 @@ function EditAttribute(props) {
 }
 
 function EditView(props) {
+  const ui = useUI();
+
   let node = props.node;
   if (!node) {
     return <div></div>;
@@ -103,6 +106,30 @@ function EditView(props) {
     childrenCategories[s].children.push(a);
   });
 
+  const onAddDrag = (evt, t) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    let n = props.context.createNode({
+      type: t,
+    });
+
+    let state = {};
+
+    state.drag = n.id;
+    state.dragType = n.type;
+    state.newNode = n;
+    state.dragPath = '_newNode';
+
+    ui.dispatch(
+      ui.setState({
+        drag: {
+          ...state,
+        },
+      })
+    );
+  };
+
   const onDelete = () => {
     props.context.removeNode(path);
   };
@@ -165,7 +192,11 @@ function EditView(props) {
               </li>
               {childrenCategories[k].children.map((ct, idx) => {
                 return (
-                  <li key={`ct-${idx}`}>
+                  <li
+                    key={`ct-${idx}`}
+                    draggable={true}
+                    onDrag={(evt) => onAddDrag(evt, ct)}
+                  >
                     <a
                       className="is-small"
                       onClick={() => {

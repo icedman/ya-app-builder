@@ -4,11 +4,12 @@ import clsx from 'clsx';
 import deepEqual from 'deep-equal';
 
 import { PreviewRegistry } from './Registry';
-
 import { guid, findById } from 'libs/utility';
 import debounce from 'debounce';
 
-const state = {};
+import { useUI } from 'stores/UIStore';
+
+let state = {};
 
 function renderChildrenPreview(children, props) {
   return (children || []).map((node, idx) => {
@@ -17,6 +18,8 @@ function renderChildrenPreview(children, props) {
 }
 
 function Preview(props) {
+  let ui = useUI();
+
   let node = props.node;
   if (!node) {
     return <div></div>;
@@ -68,8 +71,16 @@ function Preview(props) {
 
     state.drag = node.id;
     state.dragType = node.type;
-    state.dragNode = nodeContent;
+    // state.dragNode = nodeContent;
     state.dragPath = nodePath;
+
+    ui.dispatch(
+      ui.setState({
+        drag: {
+          ...state,
+        },
+      })
+    );
 
     highlightSource(node.id);
   };
@@ -77,6 +88,8 @@ function Preview(props) {
   const onDrop = (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
+
+    state = ui.state.drag;
 
     if (!state.canDrop) {
       return;
@@ -114,7 +127,7 @@ function Preview(props) {
     }
 
     // reparent
-    let removed = props.context.removeNode(state.dragPath);
+    let removed = props.context.removeNode(state.dragPath) || state.newNode;
     setTimeout(() => {
       props.context.addNode(state.dropTargetPath, removed);
     }, 0);
@@ -123,6 +136,8 @@ function Preview(props) {
   const onDragOver = (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
+
+    state = ui.state.drag;
 
     state.dropTarget = node.id;
     state.dropTargetPath = nodePath;
@@ -140,14 +155,23 @@ function Preview(props) {
 
     if (dragSource === dropTarget) {
       state.canDrop = true;
-      return;
+    } else {
+      if (componetInfo.children) {
+        state.canDrop =
+          componetInfo.children.types.indexOf(state.dragType) != -1;
+      }
+      if (!state.canDrop) {
+        // drop to parent?
+      }
     }
 
-    if (componetInfo.children) {
-      state.canDrop = componetInfo.children.types.indexOf(state.dragType) != -1;
-      // console.log(componetInfo.children.types.indexOf(state.dragType));
-      // console.log(componetInfo.children.types);
-    }
+    ui.dispatch(
+      ui.setState({
+        drag: {
+          ...state,
+        },
+      })
+    );
   };
 
   let cls = [];
@@ -164,7 +188,7 @@ function Preview(props) {
   return (
     <Component
       {...props}
-      className={clsx(props.className, 'node_container', cls)}
+      className={clsx(props.className, node.className, 'node_container', cls)}
       node={node}
       draggable={true}
       onDrag={onDrag}
