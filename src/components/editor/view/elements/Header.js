@@ -5,55 +5,32 @@ import Registry, {
 } from 'components/editor/Registry';
 import clsx from 'clsx';
 
-const menuItem = {
-  menuItem: {
-    category: 'menu',
-    parent: {
-      types: ['menu'],
-    },
-    children: {
-      types: ['menu'],
-    },
-    typeof: ['contained'],
-    attributes: {
-      path: {
-        type: 'text',
-      },
-      command: {
-        type: 'text',
-      },
-    },
-    preview: 'PreviewMenuItem',
-  },
-  menuLabel: {
-    category: 'menu',
-    parent: {
-      types: ['menu'],
+const element = {
+  header: {
+    typeof: ['textBlock'],
+    defaults: {
+      size: 2,
     },
     attributes: {
-      path: {
-        text: 'text',
+      size: {
+        type: 'select',
+        options: [1, 2, 3, 4, 5],
       },
     },
-  },
-  menuDivider: {
-    category: 'menu',
-    parent: {
-      types: ['menu'],
-    },
+    preview: 'PreviewHeader',
   },
 };
 
-function PreviewMenuItem(props) {
+function PreviewHeader(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node-menu-item')}>
+    <div {...props} className={clsx(props.className, 'node-header')}>
       {node.text ? (
-        node.text
+        <h1 className={`title is-${node.size}`}>{node.text}</h1>
       ) : (
         <div className="node_type_indicator">
           <span className="tag is-primary is-light m-r-2">{node.type}</span>
@@ -64,10 +41,10 @@ function PreviewMenuItem(props) {
   );
 }
 
-Registry.add(menuItem);
+Registry.add(element);
 
 PreviewRegistry.add({
-  PreviewMenuItem,
+  PreviewHeader,
 });
 
 // EditorRegistry.add({

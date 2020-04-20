@@ -14,8 +14,10 @@ const Registry = {
 
   add: (config) => {
     Object.keys(config).forEach((k) => {
-      let componentInfo = config[k];
-      Registry[k] = componentInfo;
+      Registry[k] = { ...config[k] };
+
+      // so that parents get resoloved
+      let componentInfo = Registry.get(k);
 
       // resolve parent/children
       if (componentInfo.parent && componentInfo.parent.types) {

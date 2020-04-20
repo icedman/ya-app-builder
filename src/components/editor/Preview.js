@@ -188,7 +188,7 @@ function Preview(props) {
   return (
     <Component
       {...props}
-      className={clsx(props.className, node.className, 'node_container', cls)}
+      className={clsx(props.className, node.className, 'node-container', cls)}
       node={node}
       draggable={true}
       onDrag={onDrag}

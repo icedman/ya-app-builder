@@ -6,6 +6,8 @@ import Registry, {
 import clsx from 'clsx';
 
 import './TextBlock';
+import './Header';
+import './Button';
 
 const element = {};
 

@@ -15,6 +15,9 @@ const input = {
       description: {
         type: 'text',
       },
+      dataField: {
+        type: 'dataField',
+      },
     },
     preview: 'PreviewInputText',
   },
@@ -27,8 +30,12 @@ function PreviewInputText(props) {
   let name = node.label || node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'field')}>
-      <div className="label">{props.name}</div>
+    <div
+      {...props}
+      className={clsx(props.className, 'node-field')}
+      style={{ display: 'block' }}
+    >
+      <div className="label">{name}</div>
       <input className="input" type="text" placeholder={node.placeholder} />
       <p className="help">{node.description}</p>
     </div>

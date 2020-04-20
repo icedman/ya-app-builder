@@ -14,7 +14,7 @@ const element = {
     children: {
       types: [],
     },
-    typeof: ['contained'],
+    typeof: ['object'],
     attributes: {
       text: {
         section: 'content',
@@ -35,7 +35,7 @@ function PreviewTextBlock(props) {
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node_model')}>
+    <div {...props} className={clsx(props.className, 'node-text-block')}>
       {node.text ? (
         node.text
       ) : (

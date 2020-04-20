@@ -48,7 +48,7 @@ function EditMockData(props) {
   };
 
   return (
-    <div {...props} className={clsx(props.className, 'node_model')}>
+    <div {...props} className={clsx(props.className, 'node-model')}>
       <div className="node_type_indicator">
         <span className="tag is-primary is-light m-r-2">{node.type}</span>{' '}
         {name} {path}
@@ -72,7 +72,7 @@ function PreviewMockData(props) {
   let name = props.node.name;
 
   return (
-    <div {...props} className={clsx(props.className, 'node_model')}>
+    <div {...props} className={clsx(props.className, 'node-model')}>
       <div className="node_type_indicator">
         <span className="tag is-primary is-light m-r-2">{node.type}</span>{' '}
         {name}

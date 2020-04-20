@@ -74,7 +74,7 @@ function Container(props) {
   return (
     <div
       {...props}
-      className={clsx(props.className, 'node_view')}
+      className={clsx(props.className, 'node-view')}
       style={{
         flexDirection: orientation,
         flex: flex,

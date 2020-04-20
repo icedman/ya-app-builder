@@ -56,7 +56,7 @@ function PreviewTextBlock(props) {
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node_model')}>
+    <div {...props} className={clsx(props.className, 'node-page')}>
       {node.text ? (
         node.text
       ) : (

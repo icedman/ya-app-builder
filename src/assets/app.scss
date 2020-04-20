@@ -68,7 +68,6 @@
   margin-right: 16px;
 }
 
-
 .noselect * {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -79,22 +78,21 @@
                                   supported by Chrome and Opera */
 }
 
-.node_container {
+.node-container {
   display: flex;
   flex: 1;
 }
 
-.node_type_indicator {
+.node-type-indicator {
   display: none;
 }
 
 .preview {
-
-  .node_type_indicator {
+  .node-type-indicator {
     display: block;
   }
 
-  .node_container {
+  .node-container {
     padding: 4px;
     margin: 2px;
     border: 1px solid;
@@ -102,21 +100,25 @@
     transition: border-color 0.25s;
   }
 
-  .node_view {
+  .node-view {
     border: 2px dashed;
     border-color: #e5e5e5;
   }
 
-  .node_model {
+  .node-model {
     border: 2px dashed;
     border-color: #e5e5e5;
     flex-direction: column;
   }
 
-  .node_field {
+  .node-field {
     border: 2px dashed;
     border-color: transparent;
     border-bottom-color: #e5e5e5;
+  }
+
+  .node-menu {
+    flex-direction: column;
   }
 
   .is-node-dragged {
@@ -131,7 +133,6 @@
   .is-node-targeted {
     border-color: #ff0000;
   }
-
 }
 
 * {

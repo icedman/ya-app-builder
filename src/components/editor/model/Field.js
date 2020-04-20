@@ -195,7 +195,7 @@ function PreviewField(props) {
   }
 
   return (
-    <div {...props} className={clsx(props.className, 'node_field')}>
+    <div {...props} className={clsx(props.className, 'node-field')}>
       <div className="level m-2">
         <div className="level-left">
           <div className="" style={{ minWidth: '120px' }}>

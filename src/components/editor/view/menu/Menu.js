@@ -27,7 +27,7 @@ function PreviewMenu(props) {
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node_model')}>
+    <div {...props} className={clsx(props.className, 'node-menu')}>
       {node.text ? (
         node.text
       ) : (
