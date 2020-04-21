@@ -152,7 +152,7 @@ function EditDataField(props) {
     }
   });
 
-  let options = [];
+  let options = [''];
 
   (dataModel.children || []).forEach((c) => {
     if (c.name && c.type.indexOf('field') === 0) {

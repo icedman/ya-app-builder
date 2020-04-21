@@ -1,10 +1,31 @@
 import React from 'react';
 import merge from 'merge';
 import { mutateState, injectId } from 'libs/utility';
+import cache from 'libs/cache';
 
 export const Store = React.createContext();
 
-const initialState = {};
+let projectId = cache.get('last-project') || 'project-default';
+let state = cache.get(projectId) || {};
+
+let routes = [];
+if (state) {
+  let pages = (state.children || []).filter((p) => {
+    return p.type === 'page';
+  });
+  routes = pages.map((p) => {
+    return {
+      name: p.name,
+      path: p.route,
+      component: (props) => <pre>{JSON.stringify(props, null, 4)}</pre>,
+    };
+  });
+}
+
+const initialState = {
+  routes,
+  ...state,
+};
 
 /* params: { path:value } */
 export function setState(params) {

@@ -5,9 +5,9 @@ import Registry, {
 } from 'components/editor/Registry';
 import clsx from 'clsx';
 
-const table = {
-  table: {
-    category: 'table',
+const input = {
+  input: {
+    category: 'form',
     parent: {
       types: ['view', 'container', 'contained'],
     },
@@ -15,23 +15,15 @@ const table = {
       types: [],
     },
     typeof: ['contained'],
-    attributes: {},
-    defaults: {
-      orientation: 'horizontal',
-    },
-  },
-  column: {
-    category: 'table',
-    parent: {
-      types: ['table'],
-    },
     attributes: {
       label: {
         type: 'text',
       },
+      dataField: {
+        type: 'dataField',
+      },
     },
-    typeof: ['container', 'textBlock'],
   },
 };
 
-Registry.add(table);
+Registry.add(input);

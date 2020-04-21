@@ -80,7 +80,6 @@
 
 .node-container {
   display: flex;
-  flex: 1;
 }
 
 .node-type-indicator {
@@ -95,7 +94,7 @@
   .node-container {
     padding: 4px;
     margin: 2px;
-    border: 1px solid;
+    border: 2px dashed;
     border-color: transparent;
     transition: border-color 0.25s;
   }

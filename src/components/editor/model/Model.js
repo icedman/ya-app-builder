@@ -15,7 +15,7 @@ const model = {
 };
 
 function EditDataModel(props) {
-  let options = [];
+  let options = [''];
 
   let project = props.context.getState('root');
 

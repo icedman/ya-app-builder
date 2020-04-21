@@ -214,10 +214,12 @@ function EditView(props) {
         })}
       </ul>
 
+      {/*
       <div className="m-1">
         <pre>{path}</pre>
         <pre>{JSON.stringify(component, null, 4)}</pre>
       </div>
+      */}
     </div>
   );
 }

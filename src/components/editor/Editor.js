@@ -143,7 +143,6 @@ function EditSelection(props) {
       <div className="label">{props.attribute.name}</div>
       <div className="select is-small">
         <select onChange={onChange} defaultValue={value}>
-          <option></option>
           {props.attribute.options.map((opt, idx) => {
             let o = {
               label: opt.label || opt,

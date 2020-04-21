@@ -16,6 +16,7 @@ import {
 
 import { useAuth } from 'stores/AuthStore';
 import { useUI } from 'stores/UIStore';
+import { useApp } from 'stores/AppStore';
 
 import path from 'path';
 
@@ -37,7 +38,8 @@ const DashboardView = () => {
 
 const renderRoute = (config) =>
   config.routes.map((route, idx) => {
-    const routePath = path.join(config.prefix, route.path);
+    const routePath = path.join(config.prefix || '', route.path);
+    console.log(routePath);
     return (
       <RouteWithAuthLayout
         key={`${route.prefix}-route-${idx}`}
@@ -51,10 +53,17 @@ const renderRoute = (config) =>
 
 const Routes = withRouter((props) => {
   const ui = useUI();
+  const app = useApp();
 
-  const routes = [
-    // ...renderRoute(DepartmentRoutes),
-  ];
+  let routes = [];
+
+  if (app.state && app.state.routes) {
+    routes = [
+      ...renderRoute({
+        routes: app.state.routes || [],
+      }),
+    ];
+  }
 
   return (
     <Switch>
@@ -71,7 +80,7 @@ const Routes = withRouter((props) => {
         component={Builder}
         exact
         __requiresAuth
-        layout={MainLayout}
+        layout={FullLayout}
         path="/editor"
       />
       <RouteWithAuthLayout

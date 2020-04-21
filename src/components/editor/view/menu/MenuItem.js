@@ -51,7 +51,7 @@ function PreviewMenuItem(props) {
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node-menu-item')}>
+    <div {...props} className={clsx(props.className, 'node-view')}>
       {node.text ? (
         node.text
       ) : (
