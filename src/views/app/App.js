@@ -5,6 +5,7 @@ import RenderRegistry from './RenderRegistry';
 
 import './view';
 import './menu';
+import './elements';
 
 export default function App(props) {
   const app = useApp();

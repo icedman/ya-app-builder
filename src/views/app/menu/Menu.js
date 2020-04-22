@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from 'stores/AppStore';
 import cache from 'libs/cache';
-import RenderRegistry from './RenderRegistry';
+import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
 
 import {
