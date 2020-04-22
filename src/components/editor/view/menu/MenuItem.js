@@ -22,25 +22,25 @@ const menuItem = {
       command: {
         type: 'text',
       },
+      label: {
+        type: 'text',
+      },
     },
     preview: 'PreviewMenuItem',
   },
   menuLabel: {
     category: 'menu',
     parent: {
-      types: ['menu'],
+      types: ['menuItem'],
     },
     attributes: {
-      path: {
-        text: 'text',
+      label: {
+        type: 'text',
       },
     },
   },
   menuDivider: {
     category: 'menu',
-    parent: {
-      types: ['menu'],
-    },
   },
 };
 
@@ -48,12 +48,12 @@ function PreviewMenuItem(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
-  let name = node.name || node.id;
+  let text = node.label || node.text || node.name;
 
   return (
     <div {...props} className={clsx(props.className, 'node-view')}>
-      {node.text ? (
-        node.text
+      {text ? (
+        text
       ) : (
         <div className="node_type_indicator">
           <span className="tag is-primary is-light m-r-2">{node.type}</span>

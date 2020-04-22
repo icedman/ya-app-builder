@@ -5,11 +5,13 @@ import { useAuth } from 'stores/AuthStore';
 const RouteWithLayout = (props) => {
   const { layout: Layout, component: Component, ...rest } = props;
 
+  let node = props.node;
+
   return (
     <Route
       {...rest}
       render={(matchProps) => (
-        <Layout>
+        <Layout node={node}>
           <Component {...matchProps} />
         </Layout>
       )}

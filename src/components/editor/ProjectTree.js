@@ -91,6 +91,13 @@ export default function ProjectTree(props) {
       type: 'view',
     },
     {
+      label: 'Menus',
+      items: (props.node.children || []).filter((v) => {
+        return v.type === 'menu';
+      }),
+      type: 'view',
+    },
+    {
       label: 'Models',
       items: (props.node.children || []).filter((v) => {
         return v.type === 'model';

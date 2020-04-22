@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { FontAwesomeIcon as TheFontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library as faLibrary } from './registry_fontawesome';
-// import { library as muiLibrary } from './registry_mui';
+import { library as muiLibrary } from './registry_mui';
 
 function IconWrapper(props) {
   if (!props.icon) {
@@ -21,10 +21,10 @@ function IconWrapper(props) {
   }
 
   // catch mui
-  // if (typeof icon === 'function' || typeof icon === 'object') {
-  //   let Icon = icon;
-  //   return <Icon {...props} />;
-  // }
+  if (typeof icon === 'function') {
+    let Icon = icon;
+    return <Icon {...props} />;
+  }
 
   // catch fontawesome
   if (!icon || !icon.prefix || icon.prefix.indexOf('fa') !== 0) {
@@ -43,7 +43,7 @@ export default IconWrapper;
 
 export const Library = {
   ...faLibrary,
-  // ...muiLibrary
+  ...muiLibrary,
 };
 
 delete Library.add;

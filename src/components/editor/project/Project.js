@@ -74,7 +74,7 @@ Registry.add({
   project: {
     children: {
       showInTree: false,
-      types: ['page', 'view', 'model'],
+      types: ['page', 'view', 'menu', 'model'],
     },
     attributes: {
       description: {

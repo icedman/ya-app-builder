@@ -17,6 +17,7 @@ if (state) {
     return {
       name: p.name,
       path: p.route,
+      node: p,
       component: (props) => <pre>{JSON.stringify(props, null, 4)}</pre>,
     };
   });

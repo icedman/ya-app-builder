@@ -15,7 +15,11 @@ const menu = {
       types: [],
     },
     typeof: ['contained'],
-    attributes: {},
+    attributes: {
+      label: {
+        type: 'text',
+      },
+    },
     preview: 'PreviewMenu',
   },
 };
