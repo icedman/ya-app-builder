@@ -75,31 +75,33 @@ function treeNodePropsAreEqual(prevProps, nextProps) {
 const TreeNodeMemo = React.memo(TreeNode, treeNodePropsAreEqual);
 
 export default function ProjectTree(props) {
+  let node = props.node || {};
+
   let cats = [
     {
       label: 'Pages',
-      items: (props.node.children || []).filter((v) => {
+      items: (node.children || []).filter((v) => {
         return v.type === 'page';
       }),
       type: 'page',
     },
     {
       label: 'Views',
-      items: (props.node.children || []).filter((v) => {
+      items: (node.children || []).filter((v) => {
         return v.type === 'view';
       }),
       type: 'view',
     },
     {
       label: 'Menus',
-      items: (props.node.children || []).filter((v) => {
+      items: (node.children || []).filter((v) => {
         return v.type === 'menu';
       }),
       type: 'menu',
     },
     {
       label: 'Models',
-      items: (props.node.children || []).filter((v) => {
+      items: (node.children || []).filter((v) => {
         return v.type === 'model';
       }),
       type: 'model',
@@ -108,7 +110,7 @@ export default function ProjectTree(props) {
 
   const onAdd = (t) => {
     let node = props.context.addNode(
-      'root',
+      null,
       {
         type: t,
       },

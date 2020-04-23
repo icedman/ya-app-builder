@@ -96,7 +96,7 @@ function SubView(props) {
   }
 
   let subView;
-  let project = props.context.getState('root');
+  let project = props.context.state();
 
   (project.children || []).forEach((c) => {
     if (c.type === 'view' && c.id === node.view) {
@@ -126,7 +126,7 @@ function SubView(props) {
 function EditSubview(props) {
   let options = [''];
 
-  let project = props.context.getState('root');
+  let project = props.context.state();
 
   (project.children || []).forEach((c) => {
     if (c.type === 'view' && c.name) {

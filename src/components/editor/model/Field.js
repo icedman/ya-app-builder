@@ -126,7 +126,7 @@ function EditDataField(props) {
   let dataModelId;
   let dataModel;
 
-  let project = props.context.getState('root');
+  let project = props.context.state();
 
   // get models
   let path = props.path.split('.');

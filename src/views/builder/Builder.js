@@ -1,5 +1,4 @@
 import React from 'react';
-
 import 'assets/_app.css';
 
 import Registry, {
@@ -17,64 +16,76 @@ import Properties from 'components/editor/Properties';
 import Preview from 'components/editor/Preview';
 import Nav from './Nav';
 
+import { useApp } from 'stores/AppStore';
+
 import { guid, findById } from 'libs/utility';
 
 const fs = new TreeState();
+window.$fs = fs;
 
 function Builder(props) {
-  // const [state, setState] = React.useState({});
-  const [tree, setTree] = React.useState({
-    root: {
-      id: guid(),
-      type: 'project',
-    },
-    _state: {},
-  });
+  const app = useApp();
 
-  fs.useState(tree, setTree);
+  let tree = app.state;
+
+  // const [state, setState] = React.useState({});
+  // const [tree, setTree] = React.useState({
+  //   root: {
+  //     id: guid(),
+  //     type: 'project',
+  //   },
+  //   _state: {},
+  // });
+
+  // fs.useState(tree, setTree);
+  fs.useContext(app, app.setState);
 
   const onSelect = (item) => {
-    setTree({
-      ...tree,
-      _state: {
-        ...tree._state,
-        selected: item,
-        drag: null,
-        dragOver: null,
-      },
+    fs.setState({
+      '_state.selected': item,
+      '_state.preview': item,
     });
+    // setTree({
+    //   ...tree,
+    //   _state: {
+    //     ...tree._state,
+    //     selected: item,
+    //     drag: null,
+    //     dragOver: null,
+    //   },
+    // });
+  };
+
+  const onPreviewSelect = (item) => {
+    fs.setState({
+      '_state.selected': item,
+      '_state.preview': item,
+    });
+    // setTree({
+    //   ...tree,
+    //   _state: {
+    //     selected: item,
+    //     preview: item,
+    //   },
+    // });
   };
 
   fs.onNodeSelect = onSelect;
 
-  const onTreeSelect = (item) => {
-    setTree({
-      ...tree,
-      _state: {
-        selected: item,
-        preview: item,
-      },
-    });
-  };
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      fs.load();
-    }, 50);
-  }, []);
-
   fs.refreshOnDelete = (id) => {
-    let s = { ...tree };
-    if (tree._state.selected && tree._state.selected.id === id) {
-      delete s.selected;
-    }
-    if (tree._state.preview && tree._state.preview.id === id) {
-      delete s.preview;
-    }
-    setTree(s);
+    // let s = { ...tree };
+    // if (tree._state.selected && tree._state.selected.id === id) {
+    //   delete s.selected;
+    // }
+    // if (tree._state.preview && tree._state.preview.id === id) {
+    //   delete s.preview;
+    // }
+    // setTree(s);
   };
 
-  let previewId = (tree._state.preview || { id: 0 }).id;
+  let treeState = tree._state || {};
+
+  let previewId = (treeState.preview || { id: 0 }).id;
   let previewNode = findById(fs.state(), previewId, { key: 'id' });
 
   let navHeight = 60;
@@ -93,9 +104,9 @@ function Builder(props) {
           }}
         >
           <ProjectTree
-            node={tree.root}
-            onSelect={onTreeSelect}
-            preview={tree._state.preview}
+            node={tree}
+            onSelect={onPreviewSelect}
+            preview={treeState.preview}
             context={fs}
           />
         </div>
@@ -115,7 +126,7 @@ function Builder(props) {
             <div className="preview has-background-white p-1">
               <Preview
                 node={previewNode}
-                focused={tree._state.selected}
+                focused={treeState.selected}
                 context={fs}
               />
             </div>
@@ -137,7 +148,7 @@ function Builder(props) {
             overflowY: 'auto',
           }}
         >
-          <Properties node={tree._state.selected} context={fs} />
+          <Properties node={treeState.selected} context={fs} />
         </div>
       </div>
     </div>

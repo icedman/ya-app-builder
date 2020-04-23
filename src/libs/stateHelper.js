@@ -45,6 +45,9 @@ export default class StateHelper {
   }
 
   getState(path) {
+    if (!path) {
+      return this.state();
+    }
     return pathToValue(this.state(), path);
   }
 

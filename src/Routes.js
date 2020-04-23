@@ -38,7 +38,7 @@ const DashboardView = () => {
 
 const renderRoute = (config) =>
   config.routes.map((route, idx) => {
-    const routePath = path.join(config.prefix || '', route.path);
+    const routePath = path.join(config.prefix || '', route.path || '');
     return (
       <RouteWithAuthLayout
         key={`${route.prefix}-route-${idx}`}

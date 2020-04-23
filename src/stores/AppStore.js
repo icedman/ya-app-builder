@@ -8,30 +8,43 @@ export const Store = React.createContext();
 let projectId = cache.get('last-project') || 'project-default';
 let state = cache.get(projectId) || {};
 
-let routes = [];
-if (state) {
-  let pages = (state.children || []).filter((p) => {
-    return p.type === 'page';
-  });
-  routes = pages.map((p) => {
-    return {
-      name: p.name,
-      path: p.route,
-      node: p,
-      component: (props) => <pre>{JSON.stringify(props, null, 4)}</pre>,
-    };
-  });
-}
-
 const initialState = {
-  routes,
   ...state,
+  routes: generateRoutes(state),
+  _state: {},
 };
+
+console.log(initialState);
+
+function generateRoutes(state) {
+  let routes = [];
+  if (state) {
+    let pages = (state.children || []).filter((p) => {
+      return p.type === 'page';
+    });
+    routes = pages.map((p) => {
+      return {
+        name: p.name,
+        path: p.route,
+        node: p,
+        component: (props) => <pre>{JSON.stringify(props, null, 4)}</pre>,
+      };
+    });
+  }
+  return routes;
+}
 
 /* params: { path:value } */
 export function setState(params) {
   return {
     type: 'SET_STATE',
+    ...params,
+  };
+}
+
+export function regenerateRoutes(params) {
+  return {
+    type: 'GEN_ROUTES',
     ...params,
   };
 }
@@ -42,7 +55,14 @@ export function reducer(state, action) {
       let params = { ...action };
       delete params.type;
       state = mutateState(state, params);
-      return { ...state };
+      return {
+        ...state,
+      };
+    case 'GEN_ROUTES':
+      return {
+        ...state,
+        routes: generateRoutes(params),
+      };
     default:
       return state;
   }
@@ -51,7 +71,7 @@ export function reducer(state, action) {
 export function StoreProvider(props) {
   const config = merge.recursive(initialState, props.config || {});
   const [state, dispatch] = React.useReducer(reducer, config);
-  const value = { state, dispatch, setState };
+  const value = { state, dispatch, setState, regenerateRoutes };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
 }
 

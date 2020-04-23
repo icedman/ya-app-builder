@@ -4,12 +4,17 @@ import cache from 'libs/cache';
 import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
 
-const Page = (props) => {
+const Header = (props) => {
   let node = props.node;
 
-  return <div>{RenderRegistry.renderChildren(node.children, props)}</div>;
+  return (
+    <div {...props}>
+      <h2>{node.text}</h2>
+      {RenderRegistry.renderChildren(node.children, props)}
+    </div>
+  );
 };
 
 RenderRegistry.add({
-  page: Page,
+  header: Header,
 });

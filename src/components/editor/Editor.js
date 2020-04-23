@@ -21,7 +21,7 @@ Registry.add({
 
 export class TreeState extends StateHelper {
   save() {
-    let state = this.getState('root');
+    let state = this.state();
     let projectId = `project-${state.id}`;
     cache.put(projectId, state, { persist: true });
     cache.put('last-project', projectId, { persist: true });
@@ -30,12 +30,7 @@ export class TreeState extends StateHelper {
   load() {
     let projectId = cache.get('last-project') || 'project-default';
     let state = cache.get(projectId) || {};
-    if (state.id) {
-      this.setState({
-        root: state,
-      });
-    }
-    // console.log(state);
+    return state;
   }
 
   createNode(node) {
@@ -65,7 +60,7 @@ export class TreeState extends StateHelper {
 
   addNode(path, node, opt) {
     opt = opt || {};
-    let updatePath = [path, 'children'].join('.');
+    let updatePath = path ? [path, 'children'].join('.') : 'children';
     let targetNode = this.getState(path);
 
     if (!targetNode) {

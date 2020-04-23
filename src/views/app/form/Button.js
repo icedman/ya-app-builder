@@ -4,12 +4,18 @@ import cache from 'libs/cache';
 import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
 
-const Page = (props) => {
+import Btn from '@material-ui/core/Button';
+
+const Button = (props) => {
   let node = props.node;
 
-  return <div>{RenderRegistry.renderChildren(node.children, props)}</div>;
+  return (
+    <Btn {...props} variant="contained" color="primary">
+      {node.text}
+    </Btn>
+  );
 };
 
 RenderRegistry.add({
-  page: Page,
+  button: Button,
 });

@@ -24,7 +24,7 @@ const page = {
 function EditPageUrl(props) {
   let options = [];
 
-  let project = props.context.getState('root');
+  let project = props.context.state();
 
   (project.children || []).forEach((c) => {
     if (c.type === 'page' && c.name) {

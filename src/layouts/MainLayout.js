@@ -5,14 +5,17 @@ import Sidebar from './main/Sidebar';
 
 import RenderRegistry from 'views/app/RenderRegistry';
 
+const sidebarWidth = '300px';
 export default (props) => {
   const ui = useUI();
   let node = props.node;
 
   return (
-    <div style={{ display: 'flex', paddingLeft: '320px', paddingTop: '80px' }}>
+    <div
+      style={{ display: 'flex', paddingLeft: sidebarWidth, paddingTop: '80px' }}
+    >
       <Topbar />
-      <Sidebar />
+      <Sidebar sidebarWidth={sidebarWidth} />
       <main style={{ flex: 1 }}>
         {node ? <RenderRegistry.Render node={node} /> : props.children}
       </main>
