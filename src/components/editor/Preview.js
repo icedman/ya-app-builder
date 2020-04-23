@@ -133,10 +133,7 @@ function Preview(props) {
     }, 0);
   };
 
-  const onDragOver = (evt) => {
-    evt.stopPropagation();
-    evt.preventDefault();
-
+  const _onDragOver = debounce(() => {
     state = ui.state.drag;
 
     state.dropTarget = node.id;
@@ -172,6 +169,13 @@ function Preview(props) {
         },
       })
     );
+  }, 25);
+
+  const onDragOver = (evt) => {
+    evt.stopPropagation();
+    evt.preventDefault();
+
+    _onDragOver();
   };
 
   let cls = [];

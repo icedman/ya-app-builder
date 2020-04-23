@@ -12,7 +12,7 @@ export default function App(props) {
   const app = useApp();
   return (
     <div>
-      Page
+      App
       <pre>{JSON.stringify(app.state, null, 4)}</pre>
     </div>
   );

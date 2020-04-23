@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import Registry, { EditorRegistry } from './Editor';
 import Icon from 'components/icons/Icon';
+import deepEqual from 'deep-equal';
 
 import { guid, findById } from 'libs/utility';
 import { useUI } from 'stores/UIStore';
@@ -13,16 +14,22 @@ function Edit(props) {
   return <div></div>;
 }
 
-function EditAttribute(props) {
-  let Component =
-    EditorRegistry[props.attribute.edit] ||
-    EditorRegistry[props.attribute.type] ||
-    Edit;
+const EditAttribute = React.memo(
+  (props) => {
+    console.log('r');
+    let Component =
+      EditorRegistry[props.attribute.edit] ||
+      EditorRegistry[props.attribute.type] ||
+      Edit;
 
-  // get value here!
+    // get value here!
 
-  return <Component {...props} />;
-}
+    return <Component {...props} />;
+  },
+  (a, b) => {
+    return deepEqual(a.node, b.node);
+  }
+);
 
 function EditView(props) {
   const ui = useUI();

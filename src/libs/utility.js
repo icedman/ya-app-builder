@@ -132,7 +132,7 @@ export function pathToUpdateObject(path, value) {
 
 export function pathToValue(state, path) {
   let p = path.split('.');
-  let node = state;
+  let node = state || {};
 
   for (let i = 0; i < p.length; i++) {
     let n = p[i];

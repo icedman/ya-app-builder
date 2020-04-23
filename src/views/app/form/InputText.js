@@ -15,18 +15,21 @@ const TextFieldMemo = React.memo(TextField, (prev, next) => {
 });
 
 const StatefulTextbox = (props) => {
-  let fs = props.context || { model: () => ({}) };
-  let m = { ...fs.model(props.model) };
-  let desc = props.description;
+  let node = props.node;
+
+  let fs = props.context;
+  let m = { ...fs.model(node.dataField) };
+
+  let desc = node.description;
   if (m.error) {
     desc = m.message;
   }
 
   return (
-    <TextFieldMemo
+    <TextField
       fullWidth
       helperText={desc}
-      label={props.label}
+      label={node.label}
       margin="dense"
       {...m}
       variant="outlined"

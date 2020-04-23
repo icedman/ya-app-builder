@@ -43,17 +43,9 @@ function Builder(props) {
   const onSelect = (item) => {
     fs.setState({
       '_state.selected': item,
-      '_state.preview': item,
+      '_state.drag': null,
+      '_state.dragOver': null,
     });
-    // setTree({
-    //   ...tree,
-    //   _state: {
-    //     ...tree._state,
-    //     selected: item,
-    //     drag: null,
-    //     dragOver: null,
-    //   },
-    // });
   };
 
   const onPreviewSelect = (item) => {
@@ -61,27 +53,9 @@ function Builder(props) {
       '_state.selected': item,
       '_state.preview': item,
     });
-    // setTree({
-    //   ...tree,
-    //   _state: {
-    //     selected: item,
-    //     preview: item,
-    //   },
-    // });
   };
 
   fs.onNodeSelect = onSelect;
-
-  fs.refreshOnDelete = (id) => {
-    // let s = { ...tree };
-    // if (tree._state.selected && tree._state.selected.id === id) {
-    //   delete s.selected;
-    // }
-    // if (tree._state.preview && tree._state.preview.id === id) {
-    //   delete s.preview;
-    // }
-    // setTree(s);
-  };
 
   let treeState = tree._state || {};
 

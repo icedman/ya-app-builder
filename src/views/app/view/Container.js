@@ -3,9 +3,16 @@ import { useApp } from 'stores/AppStore';
 import cache from 'libs/cache';
 import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
+import { findById } from 'libs/utility';
+import StateHelper from 'libs/stateHelper';
 import clsx from 'clsx';
 
+const cachedStates = {};
+
 function Container(props) {
+  const app = useApp();
+  const [state, setState] = React.useState({});
+
   let orientation = props.node.orientation === 'horizontal' ? 'row' : 'column';
   let flex = props.node.flex || (orientation === 'column' ? 1 : null);
 
@@ -14,18 +21,30 @@ function Container(props) {
 
   const renderChildren = RenderRegistry.renderChildren;
 
+  let model = node.dataModel || 'rootData';
+  let context = cachedStates[model] || new StateHelper();
+  cachedStates[model] = context;
+
+  context.useState(state, setState);
+
   return (
-    <div
-      {...props}
-      className={clsx(props.className)}
-      style={{
-        display: 'flex',
-        flexDirection: orientation,
-        flex: flex,
-      }}
-    >
-      {renderChildren(node.children, props)}
-    </div>
+    <React.Fragment>
+      {node.dataModel ? JSON.stringify(state) : ''}
+      <div
+        {...props}
+        className={clsx(props.className)}
+        style={{
+          display: 'flex',
+          flexDirection: orientation,
+          flex: flex,
+        }}
+      >
+        {renderChildren(node.children, {
+          ...props,
+          context,
+        })}
+      </div>
+    </React.Fragment>
   );
 }
 

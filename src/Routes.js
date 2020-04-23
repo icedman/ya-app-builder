@@ -44,7 +44,10 @@ const renderRoute = (config) =>
         key={`${route.prefix}-route-${idx}`}
         component={route.component}
         exact
-        node={route.node}
+        node={{
+          id: route.node.id,
+          type: route.node.type,
+        }}
         layout={route.layout || config.layout || MainLayout}
         path={routePath}
       />
