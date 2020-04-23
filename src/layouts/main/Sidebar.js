@@ -16,7 +16,7 @@ function Sidebar(props) {
 
   // find sidebar
   let sidebar =
-    app.state.children.filter((s) => {
+    (app.state.children || []).filter((s) => {
       return s.type === 'menu';
     })[0] || {};
 

@@ -29,7 +29,7 @@ export class TreeState extends StateHelper {
 
   load() {
     let projectId = cache.get('last-project') || 'project-default';
-    let state = cache.get(projectId);
+    let state = cache.get(projectId) || {};
     if (state.id) {
       this.setState({
         root: state,

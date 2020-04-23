@@ -17,7 +17,7 @@ function Topbar(props) {
 
   // find topbar
   let topbar =
-    app.state.children.filter((s) => {
+    (app.state.children || []).filter((s) => {
       return s.name === 'topbar';
     })[0] || {};
 
