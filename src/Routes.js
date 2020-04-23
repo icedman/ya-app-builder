@@ -70,7 +70,7 @@ const Routes = withRouter((props) => {
 
   return (
     <Switch>
-      <Redirect exact from="/" to="/editor" />
+      <Redirect exact from="/" to="/app" />
       {routes}
       <RouteWithAuthLayout
         component={App}

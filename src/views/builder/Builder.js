@@ -21,23 +21,12 @@ import { useApp } from 'stores/AppStore';
 import { guid, findById } from 'libs/utility';
 
 const fs = new TreeState();
-window.$fs = fs;
 
 function Builder(props) {
   const app = useApp();
 
   let tree = app.state;
 
-  // const [state, setState] = React.useState({});
-  // const [tree, setTree] = React.useState({
-  //   root: {
-  //     id: guid(),
-  //     type: 'project',
-  //   },
-  //   _state: {},
-  // });
-
-  // fs.useState(tree, setTree);
   fs.useContext(app, app.setState);
 
   const onSelect = (item) => {

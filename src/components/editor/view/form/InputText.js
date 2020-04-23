@@ -47,8 +47,3 @@ Registry.add(input);
 PreviewRegistry.add({
   PreviewInputText,
 });
-
-// EditorRegistry.add({
-//   dataModel: EditDataModel,
-//   dataField: EditDataField,
-// });

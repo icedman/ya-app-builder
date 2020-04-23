@@ -24,7 +24,7 @@ function Sidebar(props) {
   sidebar.children = [...(sidebar.children || [])];
   sidebar.children.push({
     label: 'Back to Editor',
-    path: '/',
+    path: '/editor',
     type: 'menuItem',
   });
 

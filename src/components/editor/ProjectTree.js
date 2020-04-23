@@ -80,30 +80,38 @@ export default function ProjectTree(props) {
   let cats = [
     {
       label: 'Pages',
-      items: (node.children || []).filter((v) => {
-        return v.type === 'page';
-      }),
+      items: (node.children || [])
+        .filter((v) => {
+          return v.type === 'page';
+        })
+        .sort((a, b) => (a.name > b.name ? 1 : -1)),
       type: 'page',
     },
     {
       label: 'Views',
-      items: (node.children || []).filter((v) => {
-        return v.type === 'view';
-      }),
+      items: (node.children || [])
+        .filter((v) => {
+          return v.type === 'view';
+        })
+        .sort((a, b) => (a.name > b.name ? 1 : -1)),
       type: 'view',
     },
     {
       label: 'Menus',
-      items: (node.children || []).filter((v) => {
-        return v.type === 'menu';
-      }),
+      items: (node.children || [])
+        .filter((v) => {
+          return v.type === 'menu';
+        })
+        .sort((a, b) => (a.name > b.name ? 1 : -1)),
       type: 'menu',
     },
     {
       label: 'Models',
-      items: (node.children || []).filter((v) => {
-        return v.type === 'model';
-      }),
+      items: (node.children || [])
+        .filter((v) => {
+          return v.type === 'model';
+        })
+        .sort((a, b) => (a.name > b.name ? 1 : -1)),
       type: 'model',
     },
   ];
@@ -126,7 +134,7 @@ export default function ProjectTree(props) {
       <p className="menu-label">Project</p>
       <ul className="menu-list">
         <li>
-          <TreeNodeMemo {...props} />
+          <TreeNodeMemo {...props} node={node} />
         </li>
       </ul>
 

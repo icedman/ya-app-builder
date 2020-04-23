@@ -126,7 +126,9 @@ function EditSelection(props) {
   //   {JSON.stringify(props, null, 4)}
   // </pre>
 
-  let path = [props.path, props.attribute.name].join('.');
+  let path = props.path
+    ? [props.path, props.attribute.name].join('.')
+    : props.attribute.name;
   let value = props.context.getState(path);
 
   const onChange = (v) => {
@@ -160,7 +162,10 @@ function EditSelection(props) {
 const EditSelectionMemo = React.memo(EditSelection);
 
 function EditString(props) {
-  let path = [props.path, props.attribute.name].join('.');
+  let path = props.path
+    ? [props.path, props.attribute.name].join('.')
+    : props.attribute.name;
+
   let value = props.context.getState(path);
 
   const onChange = (v) => {

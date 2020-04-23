@@ -13,13 +13,17 @@ import {
   Collapse,
 } from '@material-ui/core';
 
+const menuItemDelay = 350; // to allow animation to play
+
 const MenuItem = withRouter((props) => {
   let node = props.node;
   let label = node.label || 'menuItem';
 
   const onItemClick = (item) => {
     if (item.path) {
-      props.history.push(item.path);
+      setTimeout(() => {
+        props.history.push(item.path);
+      }, menuItemDelay);
     }
   };
 

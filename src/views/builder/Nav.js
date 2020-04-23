@@ -74,9 +74,11 @@ export default withRouter((props) => {
               <a className="button is-light" onClick={onSave}>
                 <strong>Save</strong>
               </a>
+              {/*
               <a className="button is-light" onClick={onLoad}>
                 <strong>Reload</strong>
               </a>
+              */}
               <a className="button is-danger" onClick={onRun}>
                 <strong>Run</strong>
               </a>

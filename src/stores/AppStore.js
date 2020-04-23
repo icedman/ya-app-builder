@@ -14,8 +14,6 @@ const initialState = {
   _state: {},
 };
 
-console.log(initialState);
-
 function generateRoutes(state) {
   let routes = [];
   if (state) {

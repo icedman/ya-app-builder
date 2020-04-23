@@ -1,11 +1,11 @@
-import React from 'react';
+// import React from 'react';
 
-const RenderRegistry = {
-  add: (config) => {
-    Object.keys(config).forEach((k) => {
-      RenderRegistry[k] = config[k];
-    });
-  },
-};
+// const RenderRegistry = {
+//   add: (config) => {
+//     Object.keys(config).forEach((k) => {
+//       RenderRegistry[k] = config[k];
+//     });
+//   },
+// };
 
-export default RenderRegistry;
+// export default RenderRegistry;
