@@ -10,6 +10,7 @@ import { useApp } from 'stores/AppStore';
 const Project = withRouter((props) => {
   const app = useApp();
 
+  /*
   const onSave = () => {
     props.context.save();
   };
@@ -20,16 +21,16 @@ const Project = withRouter((props) => {
 
   const onRun = () => {
     let state = props.context.getState('root');
+    
     app.dispatch(
-      app.setState({
-        definition: state,
-      })
+      app.regenerateRoutes(state)
     );
 
     setTimeout(() => {
       props.history.push('/app');
     }, 0);
   };
+  */
 
   const state = props.context.getState('root');
   let name = state.name || 'The Project';
@@ -46,8 +47,7 @@ const Project = withRouter((props) => {
         </div>
       </section>
 
-      <section className="section"></section>
-
+      {/*
       <section className="section">
         <div className="buttons">
           <button className="button" onClick={onSave}>
@@ -62,6 +62,7 @@ const Project = withRouter((props) => {
           </a>
         </div>
       </section>
+      */}
 
       <div className="has-background-white">
         <pre>{JSON.stringify(state, null, 4)}</pre>

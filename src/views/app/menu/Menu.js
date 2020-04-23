@@ -48,7 +48,11 @@ const Menu = (props) => {
 
   let node = props.node;
 
-  return <List>{RenderRegistry.renderChildren(node.children, props)}</List>;
+  return (
+    <List {...props}>
+      {RenderRegistry.renderChildren(node.children, props)}
+    </List>
+  );
 };
 
 RenderRegistry.add({

@@ -1,12 +1,27 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { useApp } from 'stores/AppStore';
 
-export default function Nav(props) {
+export default withRouter((props) => {
+  const app = useApp();
+
   const onSave = () => {
     props.context.save();
   };
 
   const onLoad = () => {
     props.context.load();
+  };
+
+  const onRun = () => {
+    let state = props.context.getState('root');
+    props.context.save();
+
+    app.dispatch(app.regenerateRoutes(state));
+
+    setTimeout(() => {
+      props.history.push('/app');
+    }, 0);
   };
 
   return (
@@ -56,11 +71,14 @@ export default function Nav(props) {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              <a className="button is-primary" onClick={onSave}>
+              <a className="button is-light" onClick={onSave}>
                 <strong>Save</strong>
               </a>
               <a className="button is-light" onClick={onLoad}>
-                Load
+                <strong>Reload</strong>
+              </a>
+              <a className="button is-danger" onClick={onRun}>
+                <strong>Run</strong>
               </a>
             </div>
           </div>
@@ -68,4 +86,4 @@ export default function Nav(props) {
       </div>
     </nav>
   );
-}
+});

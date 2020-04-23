@@ -8,8 +8,8 @@ const TextBlock = (props) => {
   let node = props.node;
 
   return (
-    <div>
-      TextBlock
+    <div {...props}>
+      {node.text}
       {RenderRegistry.renderChildren(node.children, props)}
     </div>
   );

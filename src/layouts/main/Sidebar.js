@@ -15,10 +15,18 @@ function Sidebar(props) {
   let variant = 'persistent';
 
   // find sidebar
-  let sidebar =
-    app.state.children.filter((s) => {
+  let sidebar = {
+    ...(app.state.children.filter((s) => {
       return s.type === 'menu';
-    })[0] || {};
+    })[0] || {}),
+  };
+
+  sidebar.children = [...(sidebar.children || [])];
+  sidebar.children.push({
+    label: 'Back to Editor',
+    path: '/',
+    type: 'menuItem',
+  });
 
   return (
     <Drawer
@@ -28,15 +36,9 @@ function Sidebar(props) {
       open={open}
       variant={variant}
     >
-      <RenderRegistry.Render node={sidebar} />
-      {/*
-      <div 
-      style={{width:'300px'}}
-      >
-      Sidebar
-      <pre>{JSON.stringify(sidebar, null, 4)}</pre>
+      <div style={{ width: props.sidebarWidth }}>
+        <RenderRegistry.Render node={sidebar} />
       </div>
-      */}
     </Drawer>
   );
 }
