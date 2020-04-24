@@ -56,9 +56,9 @@ export function regenerateRoutes(params) {
 
 export function reducer(state, action) {
   console.log(action._type);
+  let params = { ...action };
   switch (action._type) {
     case 'SET_STATE':
-      let params = { ...action };
       delete params._type;
       state = mutateState(state, params);
       return {
