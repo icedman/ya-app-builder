@@ -80,21 +80,14 @@ const Project = withRouter((props) => {
 
     fsUI.setState({
       '_state.selected': {
-        id: null,
+        id: itemId,
         type: 'project',
       },
-      '_state.drag': null,
-      '_state.dragOver': null,
+      '_state.preview': {
+        id: itemId,
+        type: 'project',
+      },
     });
-
-    setTimeout(() => {
-      fsUI.setState({
-        '_state.selected': {
-          id: itemId,
-          type: 'project',
-        },
-      });
-    }, 10);
   };
 
   const onSave = async () => {
