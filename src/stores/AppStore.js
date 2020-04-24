@@ -1,6 +1,6 @@
 import React from 'react';
 import merge from 'merge';
-import { mutateState, injectId } from 'libs/utility';
+import { mutateState, injectId, guid } from 'libs/utility';
 import cache from 'libs/cache';
 
 export const Store = React.createContext();
@@ -9,12 +9,15 @@ let projectId = cache.get('last-project') || 'project-default';
 let state = cache.get(projectId) || {};
 
 const initialState = {
+  id: guid(),
+  type: 'project',
   ...state,
   routes: generateRoutes(state),
   _state: {},
 };
 
 function generateRoutes(state) {
+  console.log('generateRoutes');
   let routes = [];
   if (state) {
     let pages = (state.children || []).filter((p) => {
@@ -24,7 +27,10 @@ function generateRoutes(state) {
       return {
         name: p.name,
         path: p.route,
-        node: p,
+        node: {
+          _id: p.id,
+          type: p.type,
+        },
         component: (props) => <pre>{JSON.stringify(props, null, 4)}</pre>,
       };
     });
@@ -34,6 +40,7 @@ function generateRoutes(state) {
 
 /* params: { path:value } */
 export function setState(params) {
+  console.log('set_state');
   return {
     type: 'SET_STATE',
     ...params,

@@ -16,39 +16,51 @@ import Properties from 'components/editor/Properties';
 import Preview from 'components/editor/Preview';
 import Nav from './Nav';
 
+import { useUI } from 'stores/UIStore';
 import { useApp } from 'stores/AppStore';
 
 import { guid, findById } from 'libs/utility';
 
 const fs = new TreeState();
+const fsUI = new TreeState();
 
 function Builder(props) {
   const app = useApp();
-
-  let tree = app.state;
+  const ui = useUI();
 
   fs.useContext(app, app.setState);
+  fsUI.useContext(ui, ui.setState);
 
   const onSelect = (item) => {
-    fs.setState({
-      '_state.selected': item,
+    fsUI.setState({
+      '_state.selected': {
+        id: item.id,
+        type: item.type,
+      },
       '_state.drag': null,
       '_state.dragOver': null,
     });
   };
 
   const onPreviewSelect = (item) => {
-    fs.setState({
-      '_state.selected': item,
-      '_state.preview': item,
+    fsUI.setState({
+      '_state.selected': {
+        id: item.id,
+        type: item.type,
+      },
+      '_state.preview': {
+        id: item.id,
+        type: item.type,
+      },
     });
   };
 
   fs.onNodeSelect = onSelect;
 
-  let treeState = tree._state || {};
+  let treeState = ui.state._state || {};
 
   let previewId = (treeState.preview || { id: 0 }).id;
+  let selectedId = (treeState.selected || { id: 0 }).id;
   let previewNode = findById(fs.state(), previewId, { key: 'id' });
 
   let navHeight = 60;
@@ -67,9 +79,8 @@ function Builder(props) {
           }}
         >
           <ProjectTree
-            node={tree}
+            preview={previewNode}
             onSelect={onPreviewSelect}
-            preview={treeState.preview}
             context={fs}
           />
         </div>
@@ -95,11 +106,9 @@ function Builder(props) {
             </div>
           ) : null}
 
-          {/*
-            <div className="has-background-white">
-              <pre>{JSON.stringify(tree._state, null, 4)}</pre>
-            </div>
-          */}
+          <div className="has-background-white">
+            <pre>{JSON.stringify(ui.state._state, null, 4)}</pre>
+          </div>
         </div>
 
         <div
@@ -111,7 +120,11 @@ function Builder(props) {
             overflowY: 'auto',
           }}
         >
-          <Properties node={treeState.selected} context={fs} />
+          <Properties
+            key={`properties-${selectedId}`}
+            node={treeState.selected}
+            context={fs}
+          />
         </div>
       </div>
     </div>

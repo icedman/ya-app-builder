@@ -11,6 +11,7 @@ const initialState = {
   location: {},
   notifications: [],
   mobile: $config.app.mobile || false,
+  _state: {},
 };
 
 /* params: { path:value } */

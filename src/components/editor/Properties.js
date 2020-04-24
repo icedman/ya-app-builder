@@ -16,7 +16,6 @@ function Edit(props) {
 
 const EditAttribute = React.memo(
   (props) => {
-    console.log('r');
     let Component =
       EditorRegistry[props.attribute.edit] ||
       EditorRegistry[props.attribute.type] ||
@@ -34,19 +33,21 @@ const EditAttribute = React.memo(
 function EditView(props) {
   const ui = useUI();
 
-  let node = props.node;
+  if (!props.node) {
+    return <div></div>;
+  }
+
+  let opt = { key: 'id' };
+  let node = findById(props.context.state(), props.node.id, opt);
   if (!node) {
     return <div></div>;
   }
+  let path = opt.path.join('.');
 
   let component = Registry.get(node.type);
   if (!component) {
     return <div></div>;
   }
-
-  let opt = { key: 'id' };
-  let n = findById(props.context.state(), node.id, opt);
-  let path = opt.path.join('.');
 
   let attributes = Object.keys(component.attributes).map((k) => {
     return component.attributes[k];
@@ -138,10 +139,23 @@ function EditView(props) {
   };
 
   const onDelete = () => {
+    if (path === '') {
+      // new project
+      props.context.setState({
+        id: guid(),
+        children: [],
+        server: '',
+        name: '',
+        description: '',
+      });
+
+      return;
+    }
     props.context.removeNode(path);
   };
 
   const onAddChild = (ct) => {
+    console.log(path);
     props.context.addNode(path, {
       type: ct,
     });
@@ -152,16 +166,12 @@ function EditView(props) {
       <ul>
         <li style={{ minHeight: '40px' }}>
           <span className="tag is-primary is-light m-r-2">{node.type}</span>
-          {path !== 'root' ? (
-            <button
-              className="button is-danger is-small is-pulled-right"
-              onClick={onDelete}
-            >
-              <Icon icon="faTrash" />
-            </button>
-          ) : (
-            ''
-          )}
+          <button
+            className="button is-danger is-small is-pulled-right"
+            onClick={onDelete}
+          >
+            <Icon icon="muiDelete" fontSize="inherit" />
+          </button>
         </li>
       </ul>
 
@@ -210,7 +220,7 @@ function EditView(props) {
                         onAddChild(ct);
                       }}
                     >
-                      <Icon icon="faPlus" />
+                      <Icon icon="muiAdd" fontSize="inherit" />
                       <span className="m-2">{ct}</span>
                     </a>
                   </li>
@@ -221,12 +231,10 @@ function EditView(props) {
         })}
       </ul>
 
-      {/*
       <div className="m-1">
         <pre>{path}</pre>
-        <pre>{JSON.stringify(component, null, 4)}</pre>
+        <pre>{JSON.stringify(node, null, 4)}</pre>
       </div>
-      */}
     </div>
   );
 }

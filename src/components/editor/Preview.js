@@ -5,10 +5,12 @@ import deepEqual from 'deep-equal';
 
 import { PreviewRegistry } from './Registry';
 import { guid, findById } from 'libs/utility';
+import StateHelper from 'libs/stateHelper';
 import debounce from 'debounce';
 
 import { useUI } from 'stores/UIStore';
 
+const fsUI = new StateHelper();
 let state = {};
 
 function renderChildrenPreview(children, props) {
@@ -19,6 +21,8 @@ function renderChildrenPreview(children, props) {
 
 function Preview(props) {
   let ui = useUI();
+
+  fsUI.useContext(ui, ui.setState);
 
   let node = props.node;
   if (!node) {
@@ -42,13 +46,13 @@ function Preview(props) {
   const nodeContent = JSON.stringify(node);
 
   const highlightSource = debounce((id) => {
-    props.context.setState({
+    fsUI.setState({
       '_state.drag': id,
     });
   }, 50);
 
   const highlightTarget = debounce((id) => {
-    props.context.setState({
+    fsUI.setState({
       '_state.dragOver': id,
     });
   }, 50);
@@ -58,11 +62,11 @@ function Preview(props) {
     evt.preventDefault();
 
     setTimeout(() => {
-      props.context.setState({
+      fsUI.setState({
         '_state.drag': null,
         '_state.dragOver': null,
       });
-    }, 50);
+    }, 250);
   };
 
   const onDrag = (evt) => {
@@ -74,22 +78,12 @@ function Preview(props) {
     // state.dragNode = nodeContent;
     state.dragPath = nodePath;
 
-    ui.dispatch(
-      ui.setState({
-        drag: {
-          ...state,
-        },
-      })
-    );
-
     highlightSource(node.id);
   };
 
   const onDrop = (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
-
-    state = ui.state.drag;
 
     if (!state.canDrop) {
       return;
@@ -134,7 +128,7 @@ function Preview(props) {
   };
 
   const _onDragOver = debounce(() => {
-    state = ui.state.drag;
+    // state = ui.state._state.drag;
 
     state.dropTarget = node.id;
     state.dropTargetPath = nodePath;
@@ -161,14 +155,6 @@ function Preview(props) {
         // drop to parent?
       }
     }
-
-    ui.dispatch(
-      ui.setState({
-        drag: {
-          ...state,
-        },
-      })
-    );
   }, 25);
 
   const onDragOver = (evt) => {
@@ -182,10 +168,10 @@ function Preview(props) {
   if (props.focused && props.focused.id === props.node.id) {
     cls.push('is-node-focused');
   }
-  if (props.context.getState('_state.dragOver') === props.node.id) {
+  if (ui.state._state.dragOver === props.node.id) {
     cls.push('is-node-targeted');
   }
-  if (props.context.getState('_state.drag') === props.node.id) {
+  if (ui.state._state.drag === props.node.id) {
     cls.push('is-node-dragged');
   }
 

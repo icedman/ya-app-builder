@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
 import Icon from 'components/icons/Icon';
 import deepEqual from 'deep-equal';
-
+import { findById } from 'libs/utility';
 import Registry, { EditorRegistry } from 'components/editor/Editor';
 
-function TreeNode(props) {
+function _TreeNode(props) {
   let node = props.node;
 
   if (!node) {
@@ -72,10 +72,11 @@ function treeNodePropsAreEqual(prevProps, nextProps) {
   return deepEqual(prev, next);
 }
 
-const TreeNodeMemo = React.memo(TreeNode, treeNodePropsAreEqual);
+const TreeNodeMemo = React.memo(_TreeNode, treeNodePropsAreEqual);
+const TreeNode = _TreeNode;
 
 export default function ProjectTree(props) {
-  let node = props.node || {};
+  let node = props.context.state();
 
   let cats = [
     {
@@ -156,7 +157,7 @@ export default function ProjectTree(props) {
                     onAdd(c.type);
                   }}
                 >
-                  <Icon icon="faPlus" />
+                  <Icon icon="muiAdd" fontSize="inherit" />
                   <span className="m-2">add {c.type}</span>
                 </a>
               </li>

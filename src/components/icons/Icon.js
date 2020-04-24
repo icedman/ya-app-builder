@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { FontAwesomeIcon as TheFontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon as TheFontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library as faLibrary } from './registry_fontawesome';
 import { library as muiLibrary } from './registry_mui';
 
@@ -21,7 +21,10 @@ function IconWrapper(props) {
   }
 
   // catch mui
-  if (typeof icon === 'function') {
+  if (
+    typeof icon === 'function' ||
+    (typeof icon === 'object' && icon.type && icon.type.render)
+  ) {
     let Icon = icon;
     return <Icon {...props} />;
   }
@@ -34,7 +37,8 @@ function IconWrapper(props) {
     return <Fragment></Fragment>;
   }
 
-  return <TheFontAwesomeIcon {...props} icon={icon} />;
+  return <Fragment></Fragment>;
+  // return <TheFontAwesomeIcon {...props} icon={icon} />;
 }
 
 export const FontAwesomeIcon = IconWrapper;

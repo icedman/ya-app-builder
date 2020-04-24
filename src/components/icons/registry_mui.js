@@ -11,6 +11,7 @@ import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStatio
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import PeopleIcon from '@material-ui/icons/People';
 import BrushIcon from '@material-ui/icons/Brush';
+import AddIcon from '@material-ui/icons/Add';
 
 export const library = {
   add: (icon, name) => {
@@ -18,6 +19,7 @@ export const library = {
   },
 };
 
+library.add(AddIcon, 'muiAdd');
 library.add(DeleteIcon, 'muiDelete');
 library.add(TodayIcon, 'muiToday');
 library.add(ArrowBackIcon, 'muiArrowBack');
