@@ -42,23 +42,24 @@ function generateRoutes(state) {
 export function setState(params) {
   console.log('set_state');
   return {
-    type: 'SET_STATE',
+    _type: 'SET_STATE',
     ...params,
   };
 }
 
 export function regenerateRoutes(params) {
   return {
-    type: 'GEN_ROUTES',
+    _type: 'GEN_ROUTES',
     ...params,
   };
 }
 
 export function reducer(state, action) {
-  switch (action.type) {
+  console.log(action._type);
+  switch (action._type) {
     case 'SET_STATE':
       let params = { ...action };
-      delete params.type;
+      delete params._type;
       state = mutateState(state, params);
       return {
         ...state,

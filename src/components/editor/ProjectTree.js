@@ -12,6 +12,10 @@ function _TreeNode(props) {
   }
 
   let component = Registry[node.type];
+  if (!component) {
+    return <div></div>;
+  }
+
   let className = '';
   let name = node.name || node.type;
 

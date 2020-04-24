@@ -117,7 +117,11 @@ export function pathToUpdateObject(path, value) {
       ) {
         node[n] = { $push: [value.$push] };
       } else {
-        node[n] = { $set: value };
+        if (n[0] === '$') {
+          node[n] = value;
+        } else {
+          node[n] = { $set: value };
+        }
       }
     }
 

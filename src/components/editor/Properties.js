@@ -5,6 +5,7 @@ import deepEqual from 'deep-equal';
 
 import { guid, findById } from 'libs/utility';
 import { useUI } from 'stores/UIStore';
+import StateHelper from 'libs/stateHelper';
 
 function formatLabel(l) {
   return l;
@@ -30,8 +31,12 @@ const EditAttribute = React.memo(
   }
 );
 
+const fsUI = new StateHelper();
+
 function EditView(props) {
   const ui = useUI();
+
+  fsUI.useContext(ui, ui.setState);
 
   if (!props.node) {
     return <div></div>;
@@ -139,18 +144,6 @@ function EditView(props) {
   };
 
   const onDelete = () => {
-    if (path === '') {
-      // new project
-      props.context.setState({
-        id: guid(),
-        children: [],
-        server: '',
-        name: '',
-        description: '',
-      });
-
-      return;
-    }
     props.context.removeNode(path);
   };
 
@@ -166,12 +159,16 @@ function EditView(props) {
       <ul>
         <li style={{ minHeight: '40px' }}>
           <span className="tag is-primary is-light m-r-2">{node.type}</span>
-          <button
-            className="button is-danger is-small is-pulled-right"
-            onClick={onDelete}
-          >
-            <Icon icon="muiDelete" fontSize="inherit" />
-          </button>
+          {node.type !== 'project' ? (
+            <button
+              className="button is-danger is-small is-pulled-right"
+              onClick={onDelete}
+            >
+              <Icon icon="muiDelete" fontSize="inherit" />
+            </button>
+          ) : (
+            ''
+          )}
         </li>
       </ul>
 

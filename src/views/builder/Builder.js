@@ -59,9 +59,11 @@ function Builder(props) {
 
   let treeState = ui.state._state || {};
 
-  let previewId = (treeState.preview || { id: 0 }).id;
-  let selectedId = (treeState.selected || { id: 0 }).id;
+  let previewId = (treeState.preview || app.state).id;
+  let selectedId = (treeState.selected || app.state).id;
   let previewNode = findById(fs.state(), previewId, { key: 'id' });
+
+  let appId = app.state.id;
 
   let navHeight = 60;
 
@@ -79,6 +81,7 @@ function Builder(props) {
           }}
         >
           <ProjectTree
+            key={`project-${appId}`}
             preview={previewNode}
             onSelect={onPreviewSelect}
             context={fs}
@@ -97,7 +100,10 @@ function Builder(props) {
           }}
         >
           {previewNode ? (
-            <div className="preview has-background-white p-1">
+            <div
+              key={`preview-${appId}`}
+              className="preview has-background-white p-1"
+            >
               <Preview
                 node={previewNode}
                 focused={treeState.selected}
@@ -121,7 +127,7 @@ function Builder(props) {
           }}
         >
           <Properties
-            key={`properties-${selectedId}`}
+            key={`properties-${selectedId}-${appId}`}
             node={treeState.selected}
             context={fs}
           />
