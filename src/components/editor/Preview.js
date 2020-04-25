@@ -35,7 +35,8 @@ function Preview(props) {
     return <div></div>;
   }
 
-  let Component = PreviewRegistry[componetInfo.preview || 'Container'];
+  let Component =
+    PreviewRegistry[props.preview || componetInfo.preview || 'Container'];
   let onNodeSelect = props.context.onNodeSelect || (() => {});
 
   let opt = { key: 'id' };
@@ -49,13 +50,13 @@ function Preview(props) {
     fsUI.setState({
       '_state.drag': id,
     });
-  }, 50);
+  }, 0);
 
   const highlightTarget = debounce((id) => {
     fsUI.setState({
       '_state.dragOver': id,
     });
-  }, 50);
+  }, 0);
 
   const onDragEnd = (evt) => {
     evt.stopPropagation();
@@ -89,6 +90,11 @@ function Preview(props) {
       return;
     }
 
+    if (!state.dragPath) {
+      // TODO .. dragging from properties
+      return;
+    }
+
     let ds = state.dragPath.split('.');
     let dsIdx = Number(ds.pop());
     let dragSource = ds.join('.');
@@ -97,7 +103,12 @@ function Preview(props) {
     let dtIdx = Number(dt.pop());
     let dropTarget = dt.join('.');
 
-    if (dragSource === dropTarget) {
+    let realDropTarget = props.context.getState(state.dropTargetPath);
+    let realTargetFreeContainer =
+      realDropTarget.type === 'container' &&
+      (realDropTarget.children || []).length > 0;
+
+    if (dragSource === dropTarget && !realTargetFreeContainer) {
       let dropToChildren = JSON.parse(
         JSON.stringify(props.context.getState(dropTarget) || [])
       );
@@ -134,6 +145,10 @@ function Preview(props) {
     state.dropTargetPath = nodePath;
     state.canDrop = true;
 
+    if (!state.dragPath) {
+      return;
+    }
+
     let ds = state.dragPath.split('.');
     let dsIdx = Number(ds.pop());
     let dragSource = ds.join('.');
@@ -155,7 +170,7 @@ function Preview(props) {
         // drop to parent?
       }
     }
-  }, 25);
+  }, 5);
 
   const onDragOver = (evt) => {
     evt.stopPropagation();

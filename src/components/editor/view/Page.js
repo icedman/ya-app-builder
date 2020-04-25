@@ -21,6 +21,7 @@ const page = {
     defaults: {
       children: [
         {
+          name: 'main',
           type: 'container',
         },
       ],

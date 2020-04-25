@@ -71,15 +71,15 @@ export default withRouter((props) => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              <a className="button is-light" onClick={onSave}>
+              <a className="button is-small is-light" onClick={onSave}>
                 <strong>Save</strong>
               </a>
               {/*
-              <a className="button is-light" onClick={onLoad}>
+              <a className="button is-small is-light" onClick={onLoad}>
                 <strong>Reload</strong>
               </a>
               */}
-              <a className="button is-danger" onClick={onRun}>
+              <a className="button is-small is-danger" onClick={onRun}>
                 <strong>Run</strong>
               </a>
             </div>

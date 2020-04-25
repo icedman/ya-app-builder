@@ -52,40 +52,55 @@ function PreviewTable(props) {
 
   node.children.forEach((c) => {
     if (c.type === 'column') {
+      let headerText = c.label || 'label';
+      let cellText = c.dataField || c.text || c.label || c.name || 'text';
+      let preview = 'Container';
+
+      if (!c.children || !c.children.length) {
+        preview = 'TextBlock';
+      }
+
       header.push({
         id: c.id,
-        type: 'textBlock',
-        text: c.label,
+        text: headerText,
       });
       columns.push({
-        id: c.id,
-        type: 'textBlock',
-        text: c.name || c.dataField,
+        ...c,
+        _preview: preview,
       });
     }
   });
 
   return (
-    <table>
-      <tr>
-        {header.map((c, idx) => {
-          return (
-            <th key={`th-${idx}`}>
-              <PreviewRegistry.Preview {...props} node={c} />
-            </th>
-          );
-        })}
-      </tr>
-      <tr>
-        {columns.map((c, idx) => {
-          return (
-            <td key={`td-${idx}`}>
-              <PreviewRegistry.Preview {...props} node={c} />
-            </td>
-          );
-        })}
-      </tr>
-    </table>
+    <div {...props}>
+      <div className="node_type_indicator">
+        <span className="tag is-primary is-light m-r-2">{node.type}</span>
+      </div>
+      <table className="table">
+        <thead>
+          <tr>
+            {header.map((c, idx) => {
+              return <th key={`th-${idx}`}>{c.text}</th>;
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {columns.map((c, idx) => {
+              return (
+                <td key={`td-${idx}`}>
+                  <PreviewRegistry.Preview
+                    {...props}
+                    node={c}
+                    preview={c._preview}
+                  />
+                </td>
+              );
+            })}
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 }
 

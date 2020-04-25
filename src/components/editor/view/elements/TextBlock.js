@@ -24,11 +24,11 @@ const element = {
         type: 'dataField',
       },
     },
-    preview: 'PreviewTextBlock',
+    preview: 'TextBlock',
   },
 };
 
-function PreviewTextBlock(props) {
+function TextBlock(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
@@ -51,7 +51,7 @@ function PreviewTextBlock(props) {
 Registry.add(element);
 
 PreviewRegistry.add({
-  PreviewTextBlock,
+  TextBlock,
 });
 
 // EditorRegistry.add({

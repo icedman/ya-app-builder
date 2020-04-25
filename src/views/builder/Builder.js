@@ -65,7 +65,7 @@ function Builder(props) {
 
   let appId = app.state.id;
 
-  let navHeight = 60;
+  let navHeight = 50;
 
   return (
     <div className="App noselect">
@@ -112,7 +112,7 @@ function Builder(props) {
             </div>
           ) : null}
 
-          <div className="has-background-white">
+          <div className="has-background-white" style={{ display: 'none' }}>
             <pre>{JSON.stringify(ui.state._state, null, 4)}</pre>
           </div>
         </div>

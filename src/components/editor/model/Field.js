@@ -152,6 +152,10 @@ function EditDataField(props) {
     }
   });
 
+  if (!dataModel) {
+    return <div className="tag is-danger">dataModel not found</div>;
+  }
+
   let options = [''];
 
   (dataModel.children || []).forEach((c) => {

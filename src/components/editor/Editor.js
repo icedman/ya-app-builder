@@ -80,22 +80,19 @@ export class TreeState extends StateHelper {
     let children = targetNode.children || [];
     let newNode = this.createNode(node, targetNode);
 
-    /*
-    let _state = this.getState('_state');
-    if (opt.focus) {
-      _state.selected = newNode;
-    }
-    if (opt.preview) {
-      _state.preview = newNode;
-    }
-    */
-
     this.setState({
       // _state: _state,
       [updatePath]: [...children, newNode],
     });
 
     return newNode;
+  }
+
+  addNodePromised(path, node, opt) {
+    let self = this;
+    return new Promise((resolve, reject) => {
+      resolve(self.addNode(path, node, opt));
+    });
   }
 
   removeNode(path) {
