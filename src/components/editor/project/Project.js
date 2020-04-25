@@ -43,12 +43,17 @@ const Project = withRouter((props) => {
     // console.log(newId);
     // console.log(props.context.state());
 
+    let newNode = props.context.createNode({
+      type: 'project',
+    });
+
     props.context.setState({
       $unset: keys,
+      children: [],
+      ...newNode,
       id: newId,
       type: 'project',
       server: 'localhost:1337',
-      children: [],
     });
 
     fsUI.setState({
@@ -130,6 +135,17 @@ const Project = withRouter((props) => {
       </section>
 
       <section className="section">
+        <div className="buttons">
+          <button className="button" onClick={onSave}>
+            Upload
+          </button>
+          <button className="button" onClick={onNewProject}>
+            New Project
+          </button>
+        </div>
+      </section>
+
+      <section className="section">
         <ul className="menu-list">
           {apps.map((item, idx) => (
             <li key={`app-${idx}`} className="menu-item">
@@ -143,17 +159,6 @@ const Project = withRouter((props) => {
             </li>
           ))}
         </ul>
-      </section>
-
-      <section className="section">
-        <div className="buttons">
-          <button className="button" onClick={onSave}>
-            Upload
-          </button>
-          <button className="button" onClick={onNewProject}>
-            New Project
-          </button>
-        </div>
       </section>
 
       <div className="has-background-white">
@@ -184,6 +189,47 @@ Registry.add({
         description: 'startup page',
         edit: 'pageUrl',
       },
+    },
+    defaults: {
+      children: [
+        {
+          type: 'view',
+          name: 'sidebar',
+          orientation: 'vertical',
+          children: [
+            {
+              name: 'menu',
+              type: 'menu',
+            },
+          ],
+        },
+        {
+          type: 'view',
+          name: 'detail-toolbar',
+          orientation: 'horizontal',
+          children: [
+            {
+              name: 'save',
+              type: 'button',
+            },
+            {
+              name: 'delete',
+              type: 'button',
+            },
+          ],
+        },
+        {
+          type: 'view',
+          name: 'list-searchbar',
+          orientation: 'horizontal',
+          children: [
+            {
+              name: 'search',
+              type: 'inputText',
+            },
+          ],
+        },
+      ],
     },
     preview: 'Project',
   },

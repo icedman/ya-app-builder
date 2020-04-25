@@ -36,7 +36,7 @@ function PreviewModel(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
-  let name = node.name || node.id;
+  let name = node.name; //  || node.id;
 
   return (
     <div {...props} className={clsx(props.className, 'node-model')}>

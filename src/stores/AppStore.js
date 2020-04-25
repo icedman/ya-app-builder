@@ -40,7 +40,6 @@ function generateRoutes(state) {
 
 /* params: { path:value } */
 export function setState(params) {
-  console.log('set_state');
   return {
     _type: 'SET_STATE',
     ...params,
@@ -55,7 +54,6 @@ export function regenerateRoutes(params) {
 }
 
 export function reducer(state, action) {
-  console.log(action._type);
   let params = { ...action };
   switch (action._type) {
     case 'SET_STATE':

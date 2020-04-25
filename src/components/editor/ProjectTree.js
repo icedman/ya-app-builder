@@ -3,6 +3,7 @@ import Icon from 'components/icons/Icon';
 import deepEqual from 'deep-equal';
 import { findById } from 'libs/utility';
 import Registry, { EditorRegistry } from 'components/editor/Editor';
+import { useUI } from 'stores/UIStore';
 
 function _TreeNode(props) {
   let node = props.node;
@@ -80,6 +81,7 @@ const TreeNodeMemo = React.memo(_TreeNode, treeNodePropsAreEqual);
 const TreeNode = _TreeNode;
 
 export default function ProjectTree(props) {
+  const ui = useUI();
   let node = props.context.state();
 
   let cats = [
@@ -131,6 +133,19 @@ export default function ProjectTree(props) {
         focus: true,
         preview: true,
       }
+    );
+
+    ui.dispatch(
+      ui.setState({
+        '_state.preview': {
+          id: node.id,
+          type: node.type,
+        },
+        '_state.selected': {
+          id: node.id,
+          type: node.type,
+        },
+      })
     );
   };
 

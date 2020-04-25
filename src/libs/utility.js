@@ -70,18 +70,20 @@ export function findById(state, id, opt) {
   );
 }
 
-export function injectId(state) {
+export function injectId(state, opt) {
+  opt = opt || {};
   if (state && typeof state === 'object') {
     // array
     if (state.length !== undefined) {
       for (let i = 0; i < state.length; i++) {
-        injectId(state[i]);
+        injectId(state[i], opt);
       }
       return state;
     }
 
     try {
-      state.uuid = state.uuid || guid();
+      let key = opt.key || 'uuid';
+      state[key] = state[key] || guid();
     } catch (err) {
       //
     }
@@ -89,7 +91,7 @@ export function injectId(state) {
     // object
     let keys = Object.keys(state);
     for (let i = 0; i < keys.length; i++) {
-      injectId(state[keys[i]]);
+      injectId(state[keys[i]], opt);
     }
   }
 

@@ -18,6 +18,13 @@ const page = {
         options: ['main', 'minimal', 'full'],
       },
     },
+    defaults: {
+      children: [
+        {
+          type: 'container',
+        },
+      ],
+    },
   },
 };
 

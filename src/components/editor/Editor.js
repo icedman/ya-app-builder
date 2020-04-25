@@ -1,7 +1,7 @@
 import React from 'react';
 
 import StateHelper from 'libs/stateHelper';
-import { guid, findById } from 'libs/utility';
+import { guid, injectId, findById } from 'libs/utility';
 
 import Registry, { EditorRegistry } from './Registry';
 import merge from 'merge';
@@ -36,15 +36,17 @@ export class TreeState extends StateHelper {
   createNode(node) {
     if (node.type) {
       let newComponentInfo = Registry.get(node.type);
+
       if (newComponentInfo.defaults) {
         // console.log(node.type);
         // console.log(node);
-        // console.log(newComponentInfo.defaults);
 
         node = {
           ...newComponentInfo.defaults,
           ...node,
         };
+
+        injectId(node, { key: 'id' });
       }
     }
 
