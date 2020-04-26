@@ -45,7 +45,7 @@ const renderRoute = (config) =>
         component={route.component}
         exact
         node={{
-          id: route.node.id,
+          id: route.node.id || route.node._id,
           type: route.node.type,
         }}
         layout={route.layout || config.layout || MainLayout}

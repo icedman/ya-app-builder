@@ -17,9 +17,11 @@ function Sidebar(props) {
   // find sidebar
   let sidebar = {
     ...((app.state.children || []).filter((s) => {
-      return s.type === 'menu';
+      return s.name === 'sidebar';
     })[0] || {}),
   };
+
+  // console.log(app.state);
 
   sidebar.children = [...(sidebar.children || [])];
   sidebar.children.push({

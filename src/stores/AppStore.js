@@ -13,8 +13,9 @@ const initialState = {
   type: 'project',
   ...state,
   routes: generateRoutes(state),
-  _state: {},
 };
+
+// console.log(initialState);
 
 function generateRoutes(state) {
   console.log('generateRoutes');

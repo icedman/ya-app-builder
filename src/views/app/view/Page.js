@@ -11,6 +11,7 @@ const Page = (props) => {
   const app = useApp();
 
   let node = findById(app.state, props.node.id, { key: 'id' }) || {};
+  console.log('>>' + JSON.stringify(props.node));
 
   return (
     <div>

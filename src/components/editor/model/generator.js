@@ -1,9 +1,11 @@
 import React from 'react';
 import { findById } from 'libs/utility';
+import pluralize from 'pluralize';
 
 const addDetailPage = (node, cx) => {
   return new Promise(async (resolve, reject) => {
     let modelName = node.name;
+    let pluralModelName = pluralize(modelName);
     let opt = { key: 'name' };
     let pageName = `${modelName}-detail-page`;
     let page = findById(cx.state(), pageName, opt);
@@ -21,6 +23,7 @@ const addDetailPage = (node, cx) => {
       page = cx.createNode({
         name: pageName,
         type: 'page',
+        route: `/${pluralModelName}`,
         dataModel: dataModelId,
       });
 
@@ -35,6 +38,25 @@ const addDetailPage = (node, cx) => {
         view: subView.id,
       });
     }
+
+    resolve(page);
+  });
+};
+
+const addDetailFields = (node, page, cx) => {
+  return new Promise(async (resolve, reject) => {
+    let modelName = node.name;
+    let opt = { key: 'id' };
+    let pageName = `${modelName}-detail-page`;
+    page = findById(cx.state(), page.id, opt);
+    let pagePath = opt.path.join('.');
+
+    let model =
+      (cx.state().children || []).filter((c) => {
+        return c.type === 'model' && c.name === modelName;
+      })[0] || {};
+
+    let dataModelId = model.id;
 
     // find container
     let containerOpt = { key: 'name' };
@@ -79,6 +101,7 @@ const addDetailPage = (node, cx) => {
 const addListPage = (node, cx) => {
   return new Promise(async (resolve, reject) => {
     let modelName = node.name;
+    let pluralModelName = pluralize(modelName);
     let opt = { key: 'name' };
     let pageName = `${modelName}-list-page`;
     let page = findById(cx.state(), pageName, opt);
@@ -96,6 +119,7 @@ const addListPage = (node, cx) => {
       page = cx.createNode({
         name: pageName,
         type: 'page',
+        route: `/${pluralModelName}-list`,
         dataModel: dataModelId,
       });
 
@@ -119,16 +143,36 @@ const addListPage = (node, cx) => {
         name: 'table',
         type: 'table',
       });
-
-      tableOpt = { key: 'id' };
-      table = findById(page, table.id, tableOpt);
-      tablePath = pagePath + '.' + tableOpt.path.join('.');
     }
 
-    if (!table) {
-      resolve(page);
-      return;
-    }
+    resolve(page);
+  });
+};
+
+const addListFields = (node, page, cx) => {
+  return new Promise(async (resolve, reject) => {
+    let modelName = node.name;
+    let opt = { key: 'name' };
+    let pageName = `${modelName}-list-page`;
+    page = findById(cx.state(), pageName, opt);
+    let pagePath = opt.path.join('.');
+
+    let model =
+      (cx.state().children || []).filter((c) => {
+        return c.type === 'model' && c.name === modelName;
+      })[0] || {};
+
+    let dataModelId = model.id;
+
+    // find container
+    let containerOpt = { key: 'name' };
+    let container = findById(page, 'main', containerOpt);
+    let containerPath = pagePath + '.' + containerOpt.path.join('.');
+
+    // find table
+    let tableOpt = { key: 'name' };
+    let table = findById(page, 'table', tableOpt);
+    let tablePath = pagePath + '.' + tableOpt.path.join('.');
 
     // add fields
     let children = table.children || [];
@@ -159,10 +203,56 @@ const addListPage = (node, cx) => {
   });
 };
 
+const addToSidebar = async (node, page, cx) => {
+  let modelName = node.name;
+  let opt = { key: 'name' };
+  let sidebar = findById(cx.state(), 'sidebar', opt);
+  let sidebarPath = opt.path.join('.');
+
+  if (!sidebar) {
+    return;
+  }
+
+  // find menu
+  let menuOpt = { key: 'type' };
+  let menu = findById(sidebar, 'menu', menuOpt);
+  let menuPath = sidebarPath + '.' + menuOpt.path.join('.');
+
+  // console.log(menuPath);
+
+  if (findById(menu, page.route, { key: 'path' })) {
+    return;
+  }
+
+  let children = menu.children || [];
+  let menuItem = cx.createNode(
+    {
+      type: 'menuItem',
+      path: page.route,
+      label: page.name,
+    },
+    {
+      type: 'menuItem',
+      path: `${page.route}/:id`,
+      label: page.name,
+    }
+  );
+
+  children.push(menuItem);
+
+  cx.setState({
+    [`${menuPath}.children`]: children,
+  });
+};
+
 const generate = async (node, cx) => {
-  await addDetailPage(node, cx);
-  await addListPage(node, cx);
-  await addListPage(node, cx); // to add the fields next
+  let detailPage = await addDetailPage(node, cx);
+  await addDetailFields(node, detailPage, cx);
+
+  let listPage = await addListPage(node, cx);
+  await addListFields(node, listPage, cx);
+
+  await addToSidebar(node, listPage, cx);
 };
 
 export default generate;
