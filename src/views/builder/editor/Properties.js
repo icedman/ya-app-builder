@@ -119,9 +119,14 @@ function EditView(props) {
     childrenCategories[s].children.push(a);
   });
 
+  // const onDrag = (evt, t) => {
+  //   evt.stopPropagation();
+  //   evt.preventDefault();
+  // }
+
   const onAddDrag = (evt, t) => {
     evt.stopPropagation();
-    evt.preventDefault();
+    // evt.preventDefault();
 
     let n = props.context.createNode({
       type: t,
@@ -209,7 +214,7 @@ function EditView(props) {
                   <li
                     key={`ct-${idx}`}
                     draggable={true}
-                    onDrag={(evt) => onAddDrag(evt, ct)}
+                    onDragStart={(evt) => onAddDrag(evt, ct)}
                   >
                     <a
                       className="is-small"

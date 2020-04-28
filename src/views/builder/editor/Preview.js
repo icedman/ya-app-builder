@@ -72,7 +72,7 @@ function Preview(props) {
 
   const onDrag = (evt) => {
     evt.stopPropagation();
-    evt.preventDefault();
+    // evt.preventDefault();
 
     state.drag = node.id;
     state.dragType = node.type;
@@ -200,7 +200,7 @@ function Preview(props) {
       className={clsx(props.className, node.className, 'node-container', cls)}
       node={node}
       draggable={true}
-      onDrag={onDrag}
+      onDragStart={onDrag}
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
