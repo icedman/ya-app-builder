@@ -9,6 +9,8 @@ import './elements';
 import './form';
 import './table';
 
+import './custom';
+
 export default function App(props) {
   const app = useApp();
   return (

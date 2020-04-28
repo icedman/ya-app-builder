@@ -78,7 +78,7 @@ Registry.add({
     },
     attributes: {
       view: {
-        type: 'text',
+        type: 'string',
         edit: 'subView',
       },
     },

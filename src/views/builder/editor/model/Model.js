@@ -54,7 +54,10 @@ function PreviewModel(props) {
       <div className="section">
         <div className="buttons">
           <button className="button is-small" onClick={onGenerate}>
-            Generate Pages
+            Generate pages
+          </button>
+          <button className="button is-small" onClick={onGenerate}>
+            Generate server models
           </button>
         </div>
       </div>

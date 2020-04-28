@@ -11,6 +11,11 @@ import './editor/project';
 import './editor/view';
 import './editor/model';
 
+import './editor/elements';
+import './editor/form';
+import './editor/menu';
+import './editor/table';
+
 import ProjectTree from './editor/ProjectTree';
 import Properties from './editor/Properties';
 import Preview from './editor/Preview';

@@ -61,7 +61,6 @@ export class TreeState extends StateHelper {
   }
 
   addNode(path, node, opt) {
-    console.log('add');
     opt = opt || {};
     let updatePath = path ? [path, 'children'].join('.') : 'children';
     let targetNode = this.getState(path);
@@ -81,12 +80,10 @@ export class TreeState extends StateHelper {
     let children = targetNode.children || [];
     let newNode = this.createNode(node, targetNode);
 
-    setTimeout(() => {
-      this.setState({
-        // _state: _state,
-        [updatePath]: [...children, newNode],
-      });
-    }, 10);
+    this.setState({
+      // _state: _state,
+      [updatePath]: [...children, newNode],
+    });
 
     return newNode;
   }
@@ -99,7 +96,6 @@ export class TreeState extends StateHelper {
   }
 
   removeNode(path) {
-    console.log('remove');
     let targetNode = this.getState(path);
     if (!targetNode) {
       return null;
@@ -115,16 +111,21 @@ export class TreeState extends StateHelper {
       _state.preview = null;
     }
 
-    setTimeout(() => {
-      this.setState({
-        _state: _state,
-        [path]: {
-          $splice: 1,
-        },
-      });
-    }, 20);
+    this.setState({
+      _state: _state,
+      [path]: {
+        $splice: 1,
+      },
+    });
 
     return targetNode;
+  }
+
+  async reparentNode(nodePath, newParentPath) {
+    let node = await this.removeNodePromised(nodePath);
+    if (node) {
+      this.addNode(newParentPath, node);
+    }
   }
 
   removeNodePromised(path) {
@@ -199,13 +200,37 @@ function EditString(props) {
   );
 }
 
+function EditBoolean(props) {
+  let path = props.path
+    ? [props.path, props.attribute.name].join('.')
+    : props.attribute.name;
+
+  let value = props.context.getState(path) ? true : false;
+
+  const onChange = (v) => {
+    props.context.setState({ [path]: v.target.checked });
+  };
+
+  return (
+    <div className="field">
+      <label className="checkbox label">
+        {props.attribute.name}
+        <input
+          className="m-2"
+          type="checkbox"
+          defaultValue={value}
+          onChange={onChange}
+        />
+        <p className="help">{props.attribute.description}</p>
+      </label>
+    </div>
+  );
+}
+
 EditorRegistry.add({
   select: EditSelectionMemo,
-
   string: EditString,
-});
-
-EditorRegistry.add({
+  boolean: EditBoolean,
   text: EditorRegistry.string,
 });
 

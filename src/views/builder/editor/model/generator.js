@@ -48,6 +48,7 @@ const addDetailFields = (node, page, cx) => {
     let modelName = node.name;
     let opt = { key: 'id' };
     let pageName = `${modelName}-detail-page`;
+
     page = findById(cx.state(), page.id, opt);
     let pagePath = opt.path.join('.');
 
@@ -136,10 +137,13 @@ const addListPage = (node, cx) => {
     if (!findById(container, 'list-toolbar', { key: 'name' })) {
       // subView
       let subView = findById(cx.state(), 'list-toolbar', { key: 'name' });
-      await cx.addNodePromised(containerPath, {
-        type: 'subView',
-        view: subView.id,
-      });
+      if (subView) {
+        await cx.addNodePromised(containerPath, {
+          name: 'list-toolbar',
+          type: 'subView',
+          view: subView.id,
+        });
+      }
     }
 
     // find table

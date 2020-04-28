@@ -91,14 +91,16 @@ function Preview(props) {
     }
 
     if (!state.dragPath) {
-      let s = fsUI.getState('drag');
+      let s = fsUI.getState('_state');
       state = {
         ...state,
         ...s,
       };
-      // console.log(s);
-      // TODO .. dragging from properties
-      // return;
+    }
+
+    if (!state.dragPath) {
+      // oops?
+      return;
     }
 
     let ds = state.dragPath.split('.');
@@ -137,9 +139,11 @@ function Preview(props) {
       return;
     }
 
-    // reparent
-    let removed = props.context.removeNode(state.dragPath) || state.newNode;
-    props.context.addNode(state.dropTargetPath, removed);
+    // TODO: reparent
+    // let removed = props.context.removeNode(state.dragPath) || state.newNode;
+    // props.context.addNode(state.dropTargetPath, removed);
+
+    props.context.reparentNode(state.dragPath, state.dropTargetPath);
   };
 
   const _onDragOver = debounce(() => {

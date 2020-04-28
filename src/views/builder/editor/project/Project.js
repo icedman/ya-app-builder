@@ -4,7 +4,9 @@ import { withRouter } from 'react-router-dom';
 import crud from 'libs/crud';
 import StateHelper from 'libs/stateHelper';
 import { guid } from 'libs/utility';
+import clsx from 'clsx';
 
+import { useApp } from 'stores/AppStore';
 import { useUI } from 'stores/UIStore';
 
 const fsUI = new StateHelper();
@@ -12,6 +14,7 @@ const fsUI = new StateHelper();
 const Project = withRouter((props) => {
   const [apps, setApps] = React.useState([]);
   const ui = useUI();
+  const app = useApp();
   const cs = crud('apps');
 
   fsUI.useContext(ui, ui.setState);
@@ -36,10 +39,6 @@ const Project = withRouter((props) => {
     let keys = Object.keys(props.context.state());
     let newId = guid();
 
-    // console.log(keys);
-    // console.log(newId);
-    // console.log(props.context.state());
-
     let newNode = props.context.createNode({
       type: 'project',
     });
@@ -53,6 +52,8 @@ const Project = withRouter((props) => {
       server: 'localhost:1337',
     });
 
+    props.context.save();
+
     fsUI.setState({
       '_state.selected': {
         id: newId,
@@ -61,6 +62,10 @@ const Project = withRouter((props) => {
       '_state.drag': null,
       '_state.dragOver': null,
     });
+  };
+
+  const onRun = () => {
+    props.history.push('/app');
   };
 
   const onLoadItem = async (item) => {
@@ -79,6 +84,8 @@ const Project = withRouter((props) => {
       _id: itemId,
       id: itemId,
     });
+
+    props.context.save();
 
     fsUI.setState({
       '_state.selected': {
@@ -139,22 +146,33 @@ const Project = withRouter((props) => {
           <button className="button" onClick={onNewProject}>
             New Project
           </button>
+          <button className="button is-danger" onClick={onRun}>
+            Run
+          </button>
         </div>
       </section>
 
       <section className="section">
+        <h2 className="title is-4">Other Projects</h2>
         <ul className="menu-list">
-          {apps.map((item, idx) => (
-            <li key={`app-${idx}`} className="menu-item">
-              <a
-                onClick={() => {
-                  onLoadItem(item);
-                }}
-              >
-                {item.name || item.id || item._id} {item._id}
-              </a>
-            </li>
-          ))}
+          {apps.map((item, idx) => {
+            let className = '';
+            if (app.state._id === item._id) {
+              className = 'is-active';
+            }
+            return (
+              <li key={`app-${idx}`} className="menu-item">
+                <a
+                  className={className}
+                  onClick={() => {
+                    onLoadItem(item);
+                  }}
+                >
+                  {item.name || item.id || item._id}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
@@ -217,7 +235,7 @@ Registry.add({
         },
         {
           type: 'view',
-          name: 'list-searchbar',
+          name: 'list-toolbar',
           orientation: 'horizontal',
           children: [
             {

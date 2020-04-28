@@ -1,5 +1,5 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 const menuItem = {
@@ -14,13 +14,13 @@ const menuItem = {
     typeof: ['contained'],
     attributes: {
       path: {
-        type: 'text',
+        type: 'string',
       },
       command: {
-        type: 'text',
+        type: 'string',
       },
       label: {
-        type: 'text',
+        type: 'string',
       },
     },
     preview: 'PreviewMenuItem',
@@ -32,7 +32,7 @@ const menuItem = {
     },
     attributes: {
       label: {
-        type: 'text',
+        type: 'string',
       },
     },
   },

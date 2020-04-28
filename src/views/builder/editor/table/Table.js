@@ -1,5 +1,5 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 import { guid } from 'libs/utility';
@@ -28,11 +28,11 @@ const table = {
     attributes: {
       label: {
         category: 'content',
-        type: 'text',
+        type: 'string',
       },
       text: {
         category: 'content',
-        type: 'text',
+        type: 'string',
       },
     },
     typeof: ['container'],

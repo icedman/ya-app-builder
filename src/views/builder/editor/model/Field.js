@@ -8,6 +8,9 @@ const field = {
       dataType: 'string',
     },
     attributes: {
+      required: {
+        type: 'boolean',
+      },
       dataType: {
         type: 'select',
         options: [

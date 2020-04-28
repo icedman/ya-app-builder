@@ -1,5 +1,5 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 const input = {
@@ -7,10 +7,10 @@ const input = {
     typeof: ['input'],
     attributes: {
       placeholder: {
-        type: 'text',
+        type: 'string',
       },
       description: {
-        type: 'text',
+        type: 'string',
       },
       dataField: {
         type: 'dataField',

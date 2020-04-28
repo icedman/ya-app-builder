@@ -1,5 +1,5 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 const input = {
@@ -14,7 +14,7 @@ const input = {
     typeof: ['contained'],
     attributes: {
       label: {
-        type: 'text',
+        type: 'string',
       },
       dataField: {
         type: 'dataField',

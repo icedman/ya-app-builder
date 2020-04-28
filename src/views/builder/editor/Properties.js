@@ -132,7 +132,7 @@ function EditView(props) {
       type: t,
     });
 
-    let state = {};
+    let state = { ...ui.state._state };
 
     state.drag = n.id;
     state.dragType = n.type;
@@ -141,7 +141,7 @@ function EditView(props) {
 
     ui.dispatch(
       ui.setState({
-        drag: {
+        _state: {
           ...state,
         },
       })
@@ -153,10 +153,18 @@ function EditView(props) {
   };
 
   const onAddChild = (ct) => {
-    console.log(path);
-    props.context.addNode(path, {
+    let node = props.context.addNode(path, {
       type: ct,
     });
+
+    ui.dispatch(
+      ui.setState({
+        '_state.selected': {
+          id: node.id,
+          type: node.type,
+        },
+      })
+    );
   };
 
   return (

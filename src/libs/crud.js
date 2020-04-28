@@ -23,12 +23,16 @@ class CrudModel {
       });
   }
 
-  save(doc) {
+  save(doc, action) {
     let method = doc._id ? 'put' : 'post';
-    let url =
-      this.config.app.server.url +
-      `/${this.model}` +
-      (doc._id ? '/' + doc._id : '');
+    let path = [this.config.app.server.url, this.model];
+    if (action) {
+      path.push(action);
+    }
+    if (doc._id) {
+      path.push(doc._id);
+    }
+    let url = path.join('/');
     return $http({
       method: method,
       url: url,

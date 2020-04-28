@@ -1,5 +1,5 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 const button = {
@@ -12,13 +12,13 @@ const button = {
     attributes: {
       text: {
         section: 'content',
-        type: 'text',
+        type: 'string',
       },
       path: {
-        type: 'text',
+        type: 'string',
       },
       command: {
-        type: 'text',
+        type: 'string',
       },
     },
     preview: 'PreviewButton',

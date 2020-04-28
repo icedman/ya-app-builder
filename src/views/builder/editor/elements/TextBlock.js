@@ -1,34 +1,38 @@
 import React from 'react';
-import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
-const menu = {
-  menu: {
-    category: 'menu',
+const element = {
+  textBlock: {
+    category: 'elements',
     parent: {
       types: ['view', 'container', 'contained'],
     },
     children: {
       types: [],
     },
-    typeof: ['contained'],
+    typeof: ['object'],
     attributes: {
-      label: {
-        type: 'text',
+      text: {
+        section: 'content',
+        type: 'string',
+      },
+      dataField: {
+        type: 'dataField',
       },
     },
-    preview: 'PreviewMenu',
+    preview: 'TextBlock',
   },
 };
 
-function PreviewMenu(props) {
+function TextBlock(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node-menu')}>
+    <div {...props} className={clsx(props.className, 'node-text-block')}>
       {node.text ? (
         node.text
       ) : (
@@ -41,10 +45,10 @@ function PreviewMenu(props) {
   );
 }
 
-Registry.add(menu);
+Registry.add(element);
 
 PreviewRegistry.add({
-  PreviewMenu,
+  TextBlock,
 });
 
 // EditorRegistry.add({
