@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Icon from 'components/icons/Icon';
 import deepEqual from 'deep-equal';
 import { findById } from 'libs/utility';
-import Registry, { EditorRegistry } from 'components/editor/Editor';
+import Registry, { EditorRegistry } from './Editor';
 import { useUI } from 'stores/UIStore';
 
 function _TreeNode(props) {

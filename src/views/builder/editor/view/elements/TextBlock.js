@@ -1,36 +1,40 @@
 import React from 'react';
-import Registry, {
-  EditorRegistry,
-  PreviewRegistry,
-} from 'components/editor/Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
 import clsx from 'clsx';
 
 const element = {
-  header: {
-    typeof: ['textBlock'],
-    defaults: {
-      size: 2,
+  textBlock: {
+    category: 'elements',
+    parent: {
+      types: ['view', 'container', 'contained'],
     },
+    children: {
+      types: [],
+    },
+    typeof: ['object'],
     attributes: {
-      size: {
-        type: 'select',
-        options: [1, 2, 3, 4, 5],
+      text: {
+        section: 'content',
+        type: 'text',
+      },
+      dataField: {
+        type: 'dataField',
       },
     },
-    preview: 'PreviewHeader',
+    preview: 'TextBlock',
   },
 };
 
-function PreviewHeader(props) {
+function TextBlock(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node-header')}>
+    <div {...props} className={clsx(props.className, 'node-text-block')}>
       {node.text ? (
-        <h1 className={`title is-${node.size}`}>{node.text}</h1>
+        node.text
       ) : (
         <div className="node_type_indicator">
           <span className="tag is-primary is-light m-r-2">{node.type}</span>
@@ -44,7 +48,7 @@ function PreviewHeader(props) {
 Registry.add(element);
 
 PreviewRegistry.add({
-  PreviewHeader,
+  TextBlock,
 });
 
 // EditorRegistry.add({

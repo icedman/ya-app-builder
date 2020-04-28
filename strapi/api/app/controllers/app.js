@@ -5,13 +5,13 @@
  * to customize this controller
  */
 
-const model = require('../../ModelEx');
+// const model = require('../../ModelEx');
 
 module.exports = {
 
-  find: async (ctx) => {
-    var res = await model.find('apps', ctx)
-    return res
-  }
+  // find: async (ctx) => {
+  //   var res = await model.find('apps', ctx)
+  //   return res
+  // }
 
 };

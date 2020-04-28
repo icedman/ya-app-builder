@@ -7,6 +7,7 @@ import './view';
 import './menu';
 import './elements';
 import './form';
+import './table';
 
 export default function App(props) {
   const app = useApp();

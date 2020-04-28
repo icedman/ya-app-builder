@@ -61,6 +61,7 @@ export class TreeState extends StateHelper {
   }
 
   addNode(path, node, opt) {
+    console.log('add');
     opt = opt || {};
     let updatePath = path ? [path, 'children'].join('.') : 'children';
     let targetNode = this.getState(path);
@@ -80,10 +81,12 @@ export class TreeState extends StateHelper {
     let children = targetNode.children || [];
     let newNode = this.createNode(node, targetNode);
 
-    this.setState({
-      // _state: _state,
-      [updatePath]: [...children, newNode],
-    });
+    setTimeout(() => {
+      this.setState({
+        // _state: _state,
+        [updatePath]: [...children, newNode],
+      });
+    }, 10);
 
     return newNode;
   }
@@ -96,6 +99,7 @@ export class TreeState extends StateHelper {
   }
 
   removeNode(path) {
+    console.log('remove');
     let targetNode = this.getState(path);
     if (!targetNode) {
       return null;
@@ -111,14 +115,23 @@ export class TreeState extends StateHelper {
       _state.preview = null;
     }
 
-    this.setState({
-      _state: _state,
-      [path]: {
-        $splice: 1,
-      },
-    });
+    setTimeout(() => {
+      this.setState({
+        _state: _state,
+        [path]: {
+          $splice: 1,
+        },
+      });
+    }, 20);
 
     return targetNode;
+  }
+
+  removeNodePromised(path) {
+    let self = this;
+    return new Promise((resolve, reject) => {
+      resolve(self.removeNode(path));
+    });
   }
 }
 

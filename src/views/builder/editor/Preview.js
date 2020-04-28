@@ -82,7 +82,7 @@ function Preview(props) {
     highlightSource(node.id);
   };
 
-  const onDrop = (evt) => {
+  const onDrop = async (evt) => {
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -91,8 +91,14 @@ function Preview(props) {
     }
 
     if (!state.dragPath) {
+      let s = fsUI.getState('drag');
+      state = {
+        ...state,
+        ...s,
+      };
+      // console.log(s);
       // TODO .. dragging from properties
-      return;
+      // return;
     }
 
     let ds = state.dragPath.split('.');
@@ -133,9 +139,7 @@ function Preview(props) {
 
     // reparent
     let removed = props.context.removeNode(state.dragPath) || state.newNode;
-    setTimeout(() => {
-      props.context.addNode(state.dropTargetPath, removed);
-    }, 0);
+    props.context.addNode(state.dropTargetPath, removed);
   };
 
   const _onDragOver = debounce(() => {

@@ -4,32 +4,21 @@ import cache from 'libs/cache';
 import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
 import { findById } from 'libs/utility';
-import StateHelper from 'libs/stateHelper';
-import clsx from 'clsx';
 
-const cachedStates = {};
+import clsx from 'clsx';
 
 function Container(props) {
   const app = useApp();
-  const [state, setState] = React.useState({});
-
-  let orientation = props.node.orientation === 'horizontal' ? 'row' : 'column';
-  let flex = props.node.flex || (orientation === 'column' ? 1 : null);
-
   let node = props.node;
-  let name = node.name || node.id;
 
-  const renderChildren = RenderRegistry.renderChildren;
+  let orientation = node.orientation === 'horizontal' ? 'row' : 'column';
+  let flex = node.flex || (orientation === 'column' ? 1 : null);
 
-  let model = node.dataModel || 'rootData';
-  let context = cachedStates[model] || new StateHelper();
-  cachedStates[model] = context;
-
-  context.useState(state, setState);
+  // let _props = { ... props.staticContext, staticContext: null };
+  // delete _props.staticContext;
 
   return (
     <React.Fragment>
-      {node.dataModel ? JSON.stringify(state) : ''}
       <div
         {...props}
         className={clsx(props.className)}
@@ -39,9 +28,8 @@ function Container(props) {
           flex: flex,
         }}
       >
-        {renderChildren(node.children, {
+        {RenderRegistry.renderChildren(node.children, {
           ...props,
-          context,
         })}
       </div>
     </React.Fragment>
@@ -63,7 +51,7 @@ function SubView(props) {
   });
 
   if (subView) {
-    return <RenderRegistry.Render node={subView} />;
+    return <RenderRegistry.Render node={subView} context={props.context} />;
   }
 
   return <div>missing subview {node.view}</div>;

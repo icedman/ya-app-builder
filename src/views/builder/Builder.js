@@ -5,15 +5,15 @@ import Registry, {
   EditorRegistry,
   PreviewRegistry,
   TreeState,
-} from 'components/editor/Editor';
+} from './editor/Editor';
 
-import 'components/editor/project';
-import 'components/editor/view';
-import 'components/editor/model';
+import './editor/project';
+import './editor/view';
+import './editor/model';
 
-import ProjectTree from 'components/editor/ProjectTree';
-import Properties from 'components/editor/Properties';
-import Preview from 'components/editor/Preview';
+import ProjectTree from './editor/ProjectTree';
+import Properties from './editor/Properties';
+import Preview from './editor/Preview';
 import Nav from './Nav';
 
 import { useUI } from 'stores/UIStore';

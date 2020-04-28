@@ -1,8 +1,5 @@
 import React from 'react';
-import Registry, {
-  EditorRegistry,
-  PreviewRegistry,
-} from 'components/editor/Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 
 import { findById } from 'libs/utility';
@@ -77,7 +74,7 @@ Registry.add({
   },
   subView: {
     parent: {
-      types: ['view'],
+      types: ['container', 'view'],
     },
     attributes: {
       view: {

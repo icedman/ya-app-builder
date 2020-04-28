@@ -1,43 +1,33 @@
 import React from 'react';
-import Registry, {
-  EditorRegistry,
-  PreviewRegistry,
-} from 'components/editor/Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../../Registry';
 import clsx from 'clsx';
 
 const element = {
-  textBlock: {
-    category: 'elements',
-    parent: {
-      types: ['view', 'container', 'contained'],
+  header: {
+    typeof: ['textBlock'],
+    defaults: {
+      size: 2,
     },
-    children: {
-      types: [],
-    },
-    typeof: ['object'],
     attributes: {
-      text: {
-        section: 'content',
-        type: 'text',
-      },
-      dataField: {
-        type: 'dataField',
+      size: {
+        type: 'select',
+        options: [1, 2, 3, 4, 5],
       },
     },
-    preview: 'TextBlock',
+    preview: 'PreviewHeader',
   },
 };
 
-function TextBlock(props) {
+function PreviewHeader(props) {
   const renderChildrenPreview = PreviewRegistry.renderChildrenPreview;
 
   let node = props.node;
   let name = node.name || node.id;
 
   return (
-    <div {...props} className={clsx(props.className, 'node-text-block')}>
+    <div {...props} className={clsx(props.className, 'node-header')}>
       {node.text ? (
-        node.text
+        <h1 className={`title is-${node.size}`}>{node.text}</h1>
       ) : (
         <div className="node_type_indicator">
           <span className="tag is-primary is-light m-r-2">{node.type}</span>
@@ -51,7 +41,7 @@ function TextBlock(props) {
 Registry.add(element);
 
 PreviewRegistry.add({
-  TextBlock,
+  PreviewHeader,
 });
 
 // EditorRegistry.add({

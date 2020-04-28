@@ -23,7 +23,7 @@ const addDetailPage = (node, cx) => {
       page = cx.createNode({
         name: pageName,
         type: 'page',
-        route: `/${pluralModelName}`,
+        route: `/${pluralModelName}/:id`,
         dataModel: dataModelId,
       });
 
@@ -133,6 +133,15 @@ const addListPage = (node, cx) => {
     let container = findById(page, 'main', containerOpt);
     let containerPath = pagePath + '.' + containerOpt.path.join('.');
 
+    if (!findById(container, 'list-toolbar', { key: 'name' })) {
+      // subView
+      let subView = findById(cx.state(), 'list-toolbar', { key: 'name' });
+      await cx.addNodePromised(containerPath, {
+        type: 'subView',
+        view: subView.id,
+      });
+    }
+
     // find table
     let tableOpt = { key: 'name' };
     let table = findById(page, 'table', tableOpt);
@@ -225,18 +234,11 @@ const addToSidebar = async (node, page, cx) => {
   }
 
   let children = menu.children || [];
-  let menuItem = cx.createNode(
-    {
-      type: 'menuItem',
-      path: page.route,
-      label: page.name,
-    },
-    {
-      type: 'menuItem',
-      path: `${page.route}/:id`,
-      label: page.name,
-    }
-  );
+  let menuItem = cx.createNode({
+    type: 'menuItem',
+    path: page.route,
+    label: page.name,
+  });
 
   children.push(menuItem);
 

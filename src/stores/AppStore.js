@@ -26,7 +26,7 @@ function generateRoutes(state) {
     });
     routes = pages.map((p) => {
       return {
-        name: p.name,
+        page: p.name,
         path: p.route,
         node: {
           _id: p.id,

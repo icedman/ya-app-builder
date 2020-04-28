@@ -1,8 +1,5 @@
 import React from 'react';
-import Registry, {
-  EditorRegistry,
-  PreviewRegistry,
-} from 'components/editor/Registry';
+import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import { withRouter } from 'react-router-dom';
 import crud from 'libs/crud';
 import StateHelper from 'libs/stateHelper';

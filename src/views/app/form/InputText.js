@@ -16,9 +16,13 @@ const TextFieldMemo = React.memo(TextField, (prev, next) => {
 
 const StatefulTextbox = (props) => {
   let node = props.node;
-
   let fs = props.context;
-  let m = { ...fs.model(node.dataField) };
+
+  let m = {};
+
+  if (fs) {
+    m = { ...fs.model(`data.${node.dataField}`) };
+  }
 
   let desc = node.description;
   if (m.error) {
@@ -26,14 +30,16 @@ const StatefulTextbox = (props) => {
   }
 
   return (
-    <TextField
-      fullWidth
-      helperText={desc}
-      label={node.label}
-      margin="dense"
-      {...m}
-      variant="outlined"
-    />
+    <div style={{ flex: 1, margin: '4px' }}>
+      <TextField
+        fullWidth
+        helperText={desc}
+        label={node.label}
+        margin="dense"
+        {...m}
+        variant="outlined"
+      />
+    </div>
   );
 };
 
