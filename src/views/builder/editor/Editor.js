@@ -15,6 +15,9 @@ Registry.add({
       name: {
         type: 'string',
       },
+      component: {
+        type: 'string',
+      },
     },
   },
 });

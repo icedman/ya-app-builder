@@ -3,10 +3,14 @@ import merge from 'merge';
 
 function Render(props) {
   let node = props.node;
-  let Component =
-    RenderRegistry[node.component] ||
-    RenderRegistry[node.type] ||
-    ((props) => <div>Unhandled: {node.type}</div>);
+  let Component = node.component
+    ? RenderRegistry[node.component]
+    : RenderRegistry[node.type];
+
+  if (!Component) {
+    Component = (props) => <div>Unhandled: {node.component || node.type}</div>;
+  }
+
   return <Component {...props} />;
 }
 

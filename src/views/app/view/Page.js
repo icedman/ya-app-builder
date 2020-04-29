@@ -6,6 +6,7 @@ import RenderRegistry from '../RenderRegistry';
 import { withRouter } from 'react-router-dom';
 import { findById } from 'libs/utility';
 import DataModel from '../data/DataModel';
+import debounce from 'debounce';
 
 const cachedStates = {};
 const nullDataModel = new DataModel('');
@@ -26,18 +27,18 @@ const Page = withRouter((props) => {
   let routePath;
 
   let model = node.dataModel;
+  let modelDef;
   if (model) {
-    let modelDef = (app.state.children || []).filter((c) => {
+    modelDef = (app.state.children || []).filter((c) => {
       return c.type === 'model' && c.id === model;
     })[0];
+  }
 
-    if (modelDef) {
-      context = cachedStates[node.id] || new DataModel(modelDef.name);
-      cachedStates[node.id] = context;
-      context.useState(state, setState);
-
-      routePath = modelDef.name;
-    }
+  if (modelDef) {
+    context = cachedStates[node.id] || new DataModel(modelDef.name);
+    cachedStates[node.id] = context;
+    context.useState(state, setState);
+    routePath = modelDef.name;
   }
 
   React.useEffect(() => {
@@ -62,6 +63,20 @@ const Page = withRouter((props) => {
       }
     }
 
+    if (params && params.filter && modelDef) {
+      let filter = { ...params.filter };
+      delete params.filter;
+      if (filter.search) {
+        modelDef.children.forEach((c) => {
+          if (c.type.indexOf('field') === 0) {
+            params[`or:${c.name}_regex`] = filter.search;
+          }
+        });
+      }
+    }
+
+    console.log(params);
+
     context
       .find(params)
       .then((res) => {
@@ -75,6 +90,12 @@ const Page = withRouter((props) => {
       });
   };
 
+  const onFilter = debounce(async (params) => {
+    fetchData({
+      filter: params,
+    });
+  }, 50);
+
   const onNew = async (params) => {
     props.history.push(`/${routePath}/0`);
     context.setState({
@@ -83,7 +104,6 @@ const Page = withRouter((props) => {
   };
 
   const onOpen = async (params) => {
-    console.log(routePath);
     props.history.push(`/${routePath}/${params._id}`);
     context.setState({
       data: {},
@@ -103,16 +123,18 @@ const Page = withRouter((props) => {
     props.history.replace(`/${routePath}-list`);
   };
 
+  const pageEvents = {
+    open: onOpen,
+    new: onNew,
+    save: onSave,
+    delete: onDelete,
+    filter: onFilter,
+  };
+
   React.useEffect(() => {
-    events.$on('open', onOpen);
-    events.$on('new', onNew);
-    events.$on('save', onSave);
-    events.$on('delete', onDelete);
+    events.register(pageEvents);
     return () => {
-      events.$off('open', onOpen);
-      events.$off('new', onNew);
-      events.$off('save', onSave);
-      events.$off('delete', onDelete);
+      events.unregister(pageEvents);
     };
   });
 

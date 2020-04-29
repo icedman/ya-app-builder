@@ -21,7 +21,7 @@ const StatefulTextbox = (props) => {
   let m = {};
 
   if (fs) {
-    m = { ...fs.model(`data.${node.dataField}`) };
+    m = { ...fs.model(`data.${node.dataField || node.name}`) };
   }
 
   let desc = node.description;

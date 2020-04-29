@@ -11,6 +11,9 @@ const field = {
       required: {
         type: 'boolean',
       },
+      searchable: {
+        type: 'boolean',
+      },
       dataType: {
         type: 'select',
         options: [

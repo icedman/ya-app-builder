@@ -15,6 +15,18 @@ const broadcaster = {
   $emit: function (evt, params) {
     emitter.emit(evt, params);
   },
+
+  register: function (def) {
+    Object.keys(def).forEach((k) => {
+      broadcaster.$on(k, def[k]);
+    });
+  },
+
+  unregister: function (def) {
+    Object.keys(def).forEach((k) => {
+      broadcaster.$off(k, def[k]);
+    });
+  },
 };
 
 export default broadcaster;
