@@ -125,10 +125,12 @@ export class TreeState extends StateHelper {
   }
 
   async reparentNode(nodePath, newParentPath) {
-    let node = await this.removeNodePromised(nodePath);
-    if (node) {
-      this.addNode(newParentPath, node);
-    }
+    let targetNode = {
+      ...(this.getState(nodePath) || {}),
+    };
+
+    this.addNode(newParentPath, targetNode);
+    this.removeNode(nodePath);
   }
 
   removeNodePromised(path) {

@@ -237,6 +237,7 @@ Registry.add({
           type: 'view',
           name: 'list-toolbar',
           orientation: 'horizontal',
+          component: 'Searchbar',
           children: [
             {
               name: 'search',

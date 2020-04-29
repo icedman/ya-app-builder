@@ -41,13 +41,15 @@ const Page = withRouter((props) => {
     routePath = modelDef.name;
   }
 
+  // todo validation
+
   React.useEffect(() => {
     if (model && state.data._isNull) {
       fetchData({});
     }
   }, [model]);
 
-  const fetchData = (params) => {
+  const fetchData = async (params) => {
     if (props.match) {
       params = {
         ...props.match.params,
@@ -66,16 +68,18 @@ const Page = withRouter((props) => {
     if (params && params.filter && modelDef) {
       let filter = { ...params.filter };
       delete params.filter;
+
       if (filter.search) {
         modelDef.children.forEach((c) => {
           if (c.type.indexOf('field') === 0) {
             params[`or:${c.name}_regex`] = filter.search;
           }
         });
+        delete filter.search;
       }
-    }
 
-    console.log(params);
+      params = { ...params, ...filter };
+    }
 
     context
       .find(params)

@@ -92,10 +92,9 @@ function Preview(props) {
 
     if (!state.dragPath) {
       let s = fsUI.getState('_state');
-      state = {
-        ...state,
-        ...s,
-      };
+      let newNode = s.newNode;
+      props.context.addNode(state.dropTargetPath, newNode);
+      return;
     }
 
     if (!state.dragPath) {
@@ -112,10 +111,12 @@ function Preview(props) {
     let dropTarget = dt.join('.');
 
     let realDropTarget = props.context.getState(state.dropTargetPath);
+
     let realTargetFreeContainer =
       realDropTarget.type === 'container' &&
-      (realDropTarget.children || []).length > 0;
+      (realDropTarget.children || []).length === 0;
 
+    // sort children
     if (dragSource === dropTarget && !realTargetFreeContainer) {
       let dropToChildren = JSON.parse(
         JSON.stringify(props.context.getState(dropTarget) || [])
@@ -136,6 +137,7 @@ function Preview(props) {
       props.context.setState({
         [dropTarget]: dropToChildren,
       });
+
       return;
     }
 
