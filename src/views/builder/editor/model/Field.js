@@ -1,6 +1,7 @@
 import React from 'react';
 import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
+import StateHelper from 'libs/stateHelper';
 
 const field = {
   field: {
@@ -16,6 +17,7 @@ const field = {
       },
       dataType: {
         type: 'select',
+        edit: 'dataType',
         options: [
           'string',
           'text',
@@ -184,8 +186,39 @@ function EditDataField(props) {
 }
 
 function EditDataType(props) {
+  let project = props.context.state();
+
+  let parentPath = props.path;
+  // let fieldType = props.context.getState(`${parentPath}.type`);
+  let value = props.context.getState(`${parentPath}.${props.attribute.name}`);
+
+  const [state, setState] = React.useState({
+    field: {
+      dataType: value,
+    },
+  });
+
+  React.useEffect(() => {
+    let fieldType = 'field';
+    if (state.field.dataType !== 'string') {
+      fieldType = `field:${state.field.dataType}`;
+    }
+    props.context.setState({
+      [`${parentPath}.type`]: fieldType,
+      [`${parentPath}.${props.attribute.name}`]: state.field.dataType,
+    });
+  }, [state.field.dataType]);
+
+  const fs = new StateHelper();
+  fs.useState(state, setState);
+
   const Select = EditorRegistry.select;
-  return <Select {...props} />;
+  return (
+    <div>
+      {value}
+      <Select {...props} path="field" context={fs} />
+    </div>
+  );
 }
 
 function PreviewField(props) {
