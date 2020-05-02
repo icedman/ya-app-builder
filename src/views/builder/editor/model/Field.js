@@ -183,6 +183,11 @@ function EditDataField(props) {
   );
 }
 
+function EditDataType(props) {
+  const Select = EditorRegistry.select;
+  return <Select {...props} />;
+}
+
 function PreviewField(props) {
   let name = props.node.name || 'field';
   let dataType = props.node.dataType;
@@ -226,4 +231,5 @@ PreviewRegistry.add({
 
 EditorRegistry.add({
   dataField: EditDataField,
+  dataType: EditDataType,
 });

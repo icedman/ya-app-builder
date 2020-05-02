@@ -7,7 +7,7 @@ const page = {
     typeof: ['view'],
     attributes: {
       route: {
-        type: 'text',
+        type: 'string',
       },
       layout: {
         section: 'layout',

@@ -35,12 +35,12 @@ export default class StateHelper {
   setState(newState) {
     // useState
     if (this._state && this._setState) {
-      this._setState(mutateState(this._state, newState));
+      return this._setState(mutateState(this._state, newState));
     }
 
     // useContext
     if (this._store && this.setState) {
-      this._store.dispatch(this._setState(newState));
+      return this._store.dispatch(this._setState(newState));
     }
   }
 
@@ -109,6 +109,10 @@ export default class StateHelper {
       return {};
     }
 
+    if (!model && !value) {
+      return this.validateState();
+    }
+
     let res = {};
     let state = this.state();
 
@@ -157,6 +161,10 @@ export default class StateHelper {
       Object.assign(errors, this.validate(k, pathToValue(state, k)));
     });
 
-    this.setState({ _errors: errors });
+    return this.setState({ _errors: errors });
+  }
+
+  hasErrors() {
+    return Object.keys(this.state()._errors || {}).length;
   }
 }

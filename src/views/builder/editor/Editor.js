@@ -104,7 +104,7 @@ export class TreeState extends StateHelper {
       return null;
     }
 
-    let _state = this.getState('_state');
+    let _state = this.getState('_state') || {};
 
     if (_state.selected && _state.selected.id === targetNode.id) {
       _state.selected = null;
@@ -241,3 +241,5 @@ EditorRegistry.add({
 
 export default Registry;
 export { EditorRegistry };
+
+window.$er = EditorRegistry;

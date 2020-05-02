@@ -17,6 +17,8 @@ const Button = (props) => {
     }
   };
 
+  let text = node.text || node.name || 'button';
+
   return (
     <div className={clsx(node.className)} style={{ padding: '2px' }}>
       <Btn
@@ -25,7 +27,7 @@ const Button = (props) => {
         color="primary"
         onClick={onButtonClick}
       >
-        {node.text}
+        {text}
       </Btn>
     </div>
   );

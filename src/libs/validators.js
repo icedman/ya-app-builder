@@ -58,5 +58,3 @@ export function isUrl(val) {
     return { error: 'isUrl', message: 'Not a valid url' };
   }
 }
-
-export default {};

@@ -2,12 +2,19 @@ import React from 'react';
 import Registry, { EditorRegistry, PreviewRegistry } from '../Registry';
 import clsx from 'clsx';
 import { findById } from 'libs/utility';
+import crud from 'libs/crud';
 import generate from './generator';
 
 const model = {
   model: {
     children: {
       types: [],
+    },
+    attributes: {
+      name: {
+        type: 'string',
+        description: 'singular form',
+      },
     },
     preview: 'PreviewModel',
   },
@@ -38,8 +45,21 @@ function PreviewModel(props) {
   let name = node.name; //  || node.id;
   let cx = props.context;
 
+  let project = cx.state();
+
   const onGenerate = async () => {
     await generate(node, cx);
+  };
+
+  const onGenerateServerModels = async () => {
+    let cx = crud('apps');
+    let res = await cx.request(
+      {
+        _id: project.id,
+        model: node,
+      },
+      { method: 'post', action: 'generate' }
+    );
   };
 
   return (
@@ -56,7 +76,7 @@ function PreviewModel(props) {
           <button className="button is-small" onClick={onGenerate}>
             Generate pages
           </button>
-          <button className="button is-small" onClick={onGenerate}>
+          <button className="button is-small" onClick={onGenerateServerModels}>
             Generate server models
           </button>
         </div>

@@ -7,15 +7,16 @@ import { withRouter } from 'react-router-dom';
 import { findById } from 'libs/utility';
 import DataModel from '../data/DataModel';
 import debounce from 'debounce';
+import pluralize from 'pluralize';
 
-const cachedStates = {};
-const nullDataModel = new DataModel('');
+const cachedContext = {};
+const nullDataModel = new DataModel({});
 
 const Page = withRouter((props) => {
   const app = useApp();
 
   const [state, setState] = React.useState({
-    data: { _isNull: true },
+    data: {},
   });
 
   let node = findById(app.state, props.node.id, { key: 'id' }) || {};
@@ -27,6 +28,7 @@ const Page = withRouter((props) => {
   let routePath;
 
   let model = node.dataModel;
+  let modelName = 'data';
   let modelDef;
   if (model) {
     modelDef = (app.state.children || []).filter((c) => {
@@ -35,16 +37,17 @@ const Page = withRouter((props) => {
   }
 
   if (modelDef) {
-    context = cachedStates[node.id] || new DataModel(modelDef.name);
-    cachedStates[node.id] = context;
+    context = cachedContext[node.id] || new DataModel(modelDef);
+    cachedContext[node.id] = context;
+
     context.useState(state, setState);
-    routePath = modelDef.name;
+    routePath = pluralize(modelDef.name);
   }
 
   // todo validation
 
   React.useEffect(() => {
-    if (model && state.data._isNull) {
+    if (model && !state.data._id) {
       fetchData({});
     }
   }, [model]);
@@ -85,7 +88,7 @@ const Page = withRouter((props) => {
       .find(params)
       .then((res) => {
         context.setState({
-          data: res.data,
+          [`data`]: res.data,
         });
         console.log(res);
       })
@@ -115,6 +118,12 @@ const Page = withRouter((props) => {
   };
 
   const onSave = async (params) => {
+    await context.validateState();
+
+    if (context.hasErrors()) {
+      return;
+    }
+
     let res = await context.save();
     context.setState({
       data: res.data,

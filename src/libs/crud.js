@@ -23,12 +23,9 @@ class CrudModel {
       });
   }
 
-  save(doc, action) {
+  save(doc) {
     let method = doc._id ? 'put' : 'post';
     let path = [this.config.app.server.url, this.model];
-    if (action) {
-      path.push(action);
-    }
     if (doc._id) {
       path.push(doc._id);
     }
@@ -104,6 +101,34 @@ class CrudModel {
 
   cancel(reason) {
     this.signal.cancel(reason);
+  }
+
+  request(doc, opt) {
+    console.log(doc);
+
+    opt = opt || {};
+    let method = opt.method || 'get';
+    let path = [this.config.app.server.url, this.model];
+    if (opt.action) {
+      path.push(opt.action);
+    }
+    if (doc._id) {
+      path.push(doc._id);
+    }
+    let url = path.join('/');
+    return $http({
+      method: method,
+      url: url,
+      data: doc,
+      cancelToken: this.signal.token,
+    })
+      .then((res) => {
+        console.log(res.data);
+        return Promise.resolve(res);
+      })
+      .catch((err) => {
+        return Promise.reject(err);
+      });
   }
 }
 
